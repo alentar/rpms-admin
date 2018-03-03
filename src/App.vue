@@ -1,6 +1,5 @@
 <template>
   <v-app>
-    <h1>Sample</h1>
   </v-app>
 </template>
 
