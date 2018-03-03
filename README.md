@@ -1,4 +1,4 @@
-# rpms-admin 
+# rpms-admin [![Build Status](https://travis-ci.org/alentar/rpms-admin.svg?branch=master)](https://travis-ci.org/alentar/rpms-admin)
 
 > A admin client for connect with rpms server
 
