@@ -26,11 +26,8 @@ new Vue({
   components: { App },
   template: '<App/>',
   created () {
-    rpms.auth.autoSignIn().then((user) => {
-      if (user) {
-        this.$store.dispatch('user/autoSignIn', user)
-        this.$router.push('/')
-      }
-    })
+    rpms.AuthService.refreshTokens()
+    rpms.AuthService.notifier.on('authChanged', (e) => { console.log(e) })
+    rpms.AuthService.notifier.on('setSession', () => { console.log('ok') })
   }
 })
