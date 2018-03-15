@@ -26,11 +26,16 @@ new Vue({
   components: { App },
   template: '<App/>',
   created () {
-    rpms.auth.autoSignIn().then((user) => {
-      if (user) {
-        this.$store.dispatch('user/autoSignIn', user)
-        this.$router.push('/')
+    rpms.AuthService.notifier.once('authChanged', (e) => {
+      if (e.authenticated === false) {
+        console.log('fired')
+        router.push('/signin')
       }
+    })
+
+    store.dispatch('user/autoSignIn', {root: true}).then(() => {
+      this.$store.dispatch('shared/changeAppLayout', 'app-layout')
+      router.push('/')
     })
   }
 })

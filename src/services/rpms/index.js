@@ -1,7 +1,7 @@
 'use strict'
 
-import auth from './auth'
+import AuthService from './auth'
 
 export default {
-  auth
+  AuthService
 }
