@@ -34,6 +34,9 @@
       <v-btn icon>
         <v-icon>notifications</v-icon>
       </v-btn>
+      <v-btn icon @click="signOut">
+        <v-icon>exit_to_app</v-icon>
+      </v-btn>
     </v-toolbar>
     <v-content>
       <v-container fluid fill-height>
@@ -45,10 +48,16 @@
 
 <script>
   export default {
+    name: 'AppLayout',
     data () {
       return {
       }
     },
-    name: 'AppLayout'
+    methods: {
+      signOut () {
+        this.$store.dispatch('user/signOut')
+        this.$router.push('/signin')
+      }
+    }
   }
 </script>

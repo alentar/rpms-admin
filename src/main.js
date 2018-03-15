@@ -26,8 +26,16 @@ new Vue({
   components: { App },
   template: '<App/>',
   created () {
-    rpms.AuthService.refreshTokens()
-    rpms.AuthService.notifier.on('authChanged', (e) => { console.log(e) })
-    rpms.AuthService.notifier.on('setSession', () => { console.log('ok') })
+    rpms.AuthService.notifier.once('authChanged', (e) => {
+      if (e.authenticated === false) {
+        console.log('fired')
+        router.push('/signin')
+      }
+    })
+
+    store.dispatch('user/autoSignIn', {root: true}).then(() => {
+      this.$store.dispatch('shared/changeAppLayout', 'app-layout')
+      router.push('/')
+    })
   }
 })

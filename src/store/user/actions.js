@@ -20,8 +20,25 @@ export default {
       })
   },
 
-  autoSignIn ({commit}, payload) {
-    commit(types.SET_USER, payload)
-    commit('shared/SET_LAYOUT', 'app-layout', {root: true})
+  autoSignIn ({commit}) {
+    commit('shared/SET_LOADING', true, {root: true})
+    return rpms.AuthService.autoSignIn()
+      .then((user) => {
+        commit('shared/SET_LOADING', false, {root: true})
+
+        if (user.role !== 'admin') throw new Error('Unauthorized user')
+
+        commit(types.SET_USER, user)
+        return Promise.resolve()
+      })
+      .catch(() => {
+        commit('shared/SET_LOADING', false, {root: true})
+        rpms.AuthService.signOut()
+      })
+  },
+
+  signOut ({commit}) {
+    rpms.AuthService.signOut()
+    commit(types.UNSET_USER)
   }
 }

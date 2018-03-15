@@ -71,6 +71,9 @@
         return this.$store.getters['shared/loading']
       }
     },
+    created () {
+      this.$store.dispatch('shared/changeAppLayout', 'simple-layout')
+    },
     methods: {
       signIn () {
         this.$refs.form.validate()

@@ -1,7 +1,5 @@
-'use strict'
-
 import api from '../api'
-import EventEmitter from 'eventemitter3'
+import EventEmitter from 'events'
 import moment from 'moment'
 
 export default class AuthService {
@@ -20,12 +18,35 @@ export default class AuthService {
       })
   }
 
-  static refreshTokens () {
+  static async autoSignIn () {
+    this.refreshTokens(true)
+
+    if (!this.isAuthenticated()) {
+      throw new Error('Unauthorized user')
+    }
+
+    return api()
+      .get('users/me', {
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+        }
+      })
+      .then((res) => {
+        return Promise.resolve(res.data)
+      })
+      .catch((err) => {
+        throw err
+      })
+  }
+
+  static refreshTokens (forced = false) {
     const refreshToken = localStorage.getItem('refresh_token')
     if (refreshToken === undefined || refreshToken === null) {
-      this.notifier.emit('authChanged', {authenticated: false})
+      this.notifier.emit('authChanged', { authenticated: false })
       return
     }
+
+    if (this.isAuthenticated() && !forced) return
 
     api()
       .post('auth/refresh/token', {
@@ -49,7 +70,7 @@ export default class AuthService {
     localStorage.setItem('expires_at', token.expiresIn)
     localStorage.setItem('token_type', token.tokenType)
 
-    this.notifier.emit('sessionSet', { authenticated: true })
+    this.notifier.emit('authChanged', { authenticated: true })
   }
 
   static isAuthenticated () {
