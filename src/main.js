@@ -8,7 +8,11 @@ import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import './styles/css/styles.css'
 
+// filters
+import ToUpperCase from './filters/touppercase'
+
 Vue.use(Vuetify)
+Vue.filter('touppercase', ToUpperCase)
 
 Vue.config.productionTip = false
 

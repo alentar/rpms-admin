@@ -15,7 +15,7 @@
         </v-list-tile-avatar>
         <v-list-tile-content>
           <v-list-tile-title class="title">{{ user.name.first }} {{ user.name.last }}</v-list-tile-title>
-          <v-list-tile-sub-title>{{ user.role }}</v-list-tile-sub-title>
+          <v-list-tile-sub-title>{{ user.role | touppercase }}</v-list-tile-sub-title>
         </v-list-tile-content>
       </v-list-tile>
     </v-list>
@@ -38,11 +38,19 @@
         </v-list-tile-content>
       </v-list-tile>
     </v-list>
+
+    <app-signout-dialog :display="dialog" @cancel="dialog = false"></app-signout-dialog>
   </v-menu>
 </template>
 
 <script>
+import SignOutDialog from './SignOutDialog'
+
 export default {
+  components: {
+    'app-signout-dialog': SignOutDialog
+  },
+
   computed: {
     user () {
       return this.$store.getters['user/user']
@@ -50,11 +58,25 @@ export default {
   },
 
   data: () => ({
+    dialog: false,
     profileMenu: [
       { icon: 'person', text: 'My Profile', action: 'profile' },
       { icon: 'exit_to_app', text: 'Sign out', action: 'showSignOut' }
     ]
-  })
+  }),
+
+  methods: {
+    showSignOut () {
+      this.dialog = true
+    },
+
+    profile () {
+      this.$router.push('/profile')
+    },
+    invoke (name) {
+      this[name]()
+    }
+  }
 }
 </script>
 
