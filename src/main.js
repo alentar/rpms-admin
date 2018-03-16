@@ -7,7 +7,6 @@ import router from './router'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import './styles/css/styles.css'
-import rpms from './services/rpms'
 
 Vue.use(Vuetify)
 
@@ -26,17 +25,6 @@ new Vue({
   components: { App },
   template: '<App/>',
   created () {
-    rpms.AuthService.notifier.on('authChanged', (e) => {
-      if (e.authenticated === false) {
-        this.$store.dispatch('shared/changeAppLayout', 'simple-layout')
-        this.$store.dispatch('user/signOut')
-        router.push('/signin')
-      }
-    })
-
-    store.dispatch('user/autoSignIn', {root: true}).then(() => {
-      this.$store.dispatch('shared/changeAppLayout', 'app-layout')
-      router.push('/')
-    })
+    store.dispatch('user/autoSignIn', {root: true})
   }
 })

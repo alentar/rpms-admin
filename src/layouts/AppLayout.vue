@@ -79,29 +79,7 @@
       <v-btn icon>
         <v-icon>notifications</v-icon>
       </v-btn>
-      <v-menu offset-y>
-        <v-btn icon large slot="activator">
-          <v-avatar size="32px" tile>
-            <img src="/static/user.png">
-          </v-avatar>
-        </v-btn>
-        <v-list>
-          <v-list-tile
-            v-for="item in profileMenu"
-            :key="item.text"
-            @click="invoke(item.action)"
-          >
-            <v-list-tile-action>
-              <v-icon>{{ item.icon }}</v-icon>
-            </v-list-tile-action>
-            <v-list-tile-content>
-              <v-list-tile-title>
-                {{ item.text }}
-              </v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-list>
-      </v-menu>
+    <app-user-menu></app-user-menu>
     </v-toolbar>
     <template>
       <v-dialog v-model="signOutDialog" max-width="300">
@@ -130,8 +108,13 @@
 </template>
 
 <script>
+  import UserMenu from '@/components/Application/UserMenu'
+
   export default {
     name: 'AppLayout',
+    components: {
+      'app-user-menu': UserMenu
+    },
     data () {
       return {
         drawer: true,
@@ -145,10 +128,6 @@
           { icon: 'settings', text: 'Settings', link: '/settings' },
           { icon: 'chat_bubble', text: 'Send feedback', link: '/feedback' },
           { icon: 'help', text: 'Help', link: '/help' }
-        ],
-        profileMenu: [
-          { icon: 'person', text: 'Profile', action: 'profile' },
-          { icon: 'exit_to_app', text: 'Sign out', action: 'showSignOut' }
         ]
       }
     },

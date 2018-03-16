@@ -29,6 +29,7 @@ export default {
         if (user.role !== 'admin') throw new Error('Unauthorized user')
 
         commit(types.SET_USER, user)
+        commit('shared/SET_LAYOUT', 'app-layout', {root: true})
         return Promise.resolve()
       })
       .catch(() => {
@@ -38,7 +39,7 @@ export default {
   },
 
   signOut ({commit}) {
-    rpms.AuthService.signOut()
     commit(types.UNSET_USER)
+    rpms.AuthService.signOut()
   }
 }
