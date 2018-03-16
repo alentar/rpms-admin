@@ -3,6 +3,8 @@ import EventEmitter from 'events'
 import moment from 'moment'
 
 export default class AuthService {
+  /* global notifier */
+  /* eslint no-undef: "error" */
   static notifier = new EventEmitter()
 
   static async signIn (nic, password) {

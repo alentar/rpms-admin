@@ -26,9 +26,10 @@ new Vue({
   components: { App },
   template: '<App/>',
   created () {
-    rpms.AuthService.notifier.once('authChanged', (e) => {
+    rpms.AuthService.notifier.on('authChanged', (e) => {
       if (e.authenticated === false) {
-        console.log('fired')
+        this.$store.dispatch('shared/changeAppLayout', 'simple-layout')
+        this.$store.dispatch('user/signOut')
         router.push('/signin')
       }
     })

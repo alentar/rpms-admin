@@ -40,7 +40,6 @@
             <v-list-tile
               v-for="(child, i) in item.children"
               :key="i"
-              @click=""
             >
               <v-list-tile-action v-if="child.icon">
                 <v-icon>{{ child.icon }}</v-icon>
@@ -78,12 +77,9 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn icon>
-        <v-icon>apps</v-icon>
-      </v-btn>
-      <v-btn icon>
         <v-icon>notifications</v-icon>
       </v-btn>
-      <v-menu offset-y position-y="10px">
+      <v-menu offset-y>
         <v-btn icon large slot="activator">
           <v-avatar size="32px" tile>
             <img src="/static/user.png">
