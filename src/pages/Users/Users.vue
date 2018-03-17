@@ -28,20 +28,27 @@
             bottom
             right
             style="bottom: 50px"
+            @click.native="createUserDialog = true"
           >
             <v-icon>add</v-icon>
           </v-btn>
         </v-flex>
       </v-layout>
-
+      <app-user-create-dialog :dialog="createUserDialog" @cancel="createUserDialog = false"></app-user-create-dialog>
     </v-container>
 </template>
 
 <script>
+  import CreateUserDialog from '@/components/Users/Dialogs/CreateUserDialog'
+
   export default {
+    components: {
+      'app-user-create-dialog': CreateUserDialog
+    },
     data () {
       return {
         fab: false,
+        createUserDialog: false,
         search: '',
         totalItems: 0,
         items: [],
@@ -246,8 +253,5 @@
 </script>
 
 <style scoped>
-  .speeddial{
-    position: absolute;
-    bottom: 50px;
-  }
+
 </style>

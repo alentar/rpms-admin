@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import SignOutDialog from './SignOutDialog'
+import SignOutDialog from '../Dialogs/SignOutDialog'
 
 export default {
   components: {

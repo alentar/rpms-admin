@@ -40,8 +40,8 @@
 </template>
 
 <script>
-  import UserMenu from '@/components/Application/UserMenu'
-  import MainMenu from '@/components/Application/MainMenu'
+  import UserMenu from '@/components/Application/Menus/UserMenu'
+  import MainMenu from '@/components/Application/Menus/MainMenu'
 
   export default {
     name: 'AppLayout',
