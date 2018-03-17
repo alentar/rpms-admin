@@ -81,6 +81,10 @@ export default class AuthService {
     return moment().isBefore(localStorage.getItem('expires_at'))
   }
 
+  static getAccessToken () {
+    return localStorage.getItem('access_token')
+  }
+
   static signOut () {
     localStorage.removeItem('access_token')
     localStorage.removeItem('refresh_token')
