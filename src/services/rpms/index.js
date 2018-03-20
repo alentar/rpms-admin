@@ -3,5 +3,5 @@
 import AuthService from './auth'
 
 export default {
-  AuthService
+  AuthService: new AuthService()
 }

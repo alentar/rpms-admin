@@ -6,6 +6,7 @@ import rpms from '../../services/rpms'
 export default {
   signIn ({commit}, payload) {
     commit('shared/SET_LOADING', true, {root: true})
+
     return rpms.AuthService
       .signIn(payload.nic, payload.password)
       .then(user => {
