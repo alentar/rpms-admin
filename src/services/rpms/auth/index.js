@@ -23,7 +23,7 @@ export default class AuthService {
   }
 
   async autoSignIn () {
-    if (!this.isAuthenticated()) {
+    if (!AuthService.isAuthenticated()) {
       throw new Error('Unauthorized user')
     }
 
@@ -32,19 +32,19 @@ export default class AuthService {
     return api()
       .get('users/me', {
         headers: {
-          'Authorization': this.accessToken
+          'Authorization': AuthService.accessToken
         }
       })
       .then((res) => {
         return Promise.resolve(res.data)
       })
       .catch((err) => {
-        throw err
+        return Promise.reject(err.response.data)
       })
   }
 
   scheduleTokenRenewal () {
-    var expiresAt = this.expiresAt
+    var expiresAt = AuthService.expiresAt
     var delay = expiresAt - Date.now()
 
     if (delay > 0) {
@@ -58,7 +58,7 @@ export default class AuthService {
   async renewTokens () {
     api()
       .post('auth/refresh/token', {
-        refreshToken: this.refreshToken
+        refreshToken: AuthService.refreshToken
       })
       .then((resp) => {
         this.setSession(resp.data.token)
@@ -82,22 +82,22 @@ export default class AuthService {
     this.scheduleTokenRenewal()
   }
 
-  isAuthenticated () {
-    if (!this.expiresAt) return false
-    const period = this.expiresAt - Date.now()
+  static isAuthenticated () {
+    if (!AuthService.expiresAt) return false
+    const period = AuthService.expiresAt - Date.now()
     return period > 0
   }
 
-  get expiresAt () {
+  static get expiresAt () {
     const val = localStorage.getItem('expires_at')
     return val === null || val === undefined ? null : new Date(val)
   }
 
-  get refreshToken () {
+  static get refreshToken () {
     return localStorage.getItem('refresh_token')
   }
 
-  get accessToken () {
+  static get accessToken () {
     return localStorage.getItem('token_type') + ' ' + localStorage.getItem('access_token')
   }
 
