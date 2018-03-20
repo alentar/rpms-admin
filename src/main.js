@@ -7,6 +7,7 @@ import router from './router'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import './styles/css/styles.css'
+import rpms from './services/rpms'
 
 // filters
 import ToUpperCase from './filters/touppercase'
@@ -29,6 +30,11 @@ new Vue({
   components: { App },
   template: '<App/>',
   created () {
+    rpms.AuthService.notifier.on('signout', () => {
+      store.dispatch('user/signOut', {root: true})
+      router.push('/signin')
+    })
+
     store.dispatch('user/autoSignIn', {root: true})
   }
 })

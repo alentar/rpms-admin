@@ -1,6 +1,9 @@
 import api from '../api'
+import EventEmitter from 'events'
 
 export default class AuthService {
+  notifier = new EventEmitter()
+
   constructor () {
     this.tokenRenewalTimeout = null
   }
@@ -62,7 +65,7 @@ export default class AuthService {
         return Promise.resolve()
       })
       .catch(() => {
-        this.signOut()
+        this.signOut(true)
       })
   }
 
@@ -98,8 +101,10 @@ export default class AuthService {
     return localStorage.getItem('token_type') + ' ' + localStorage.getItem('access_token')
   }
 
-  signOut () {
+  signOut (event = false) {
     clearTimeout(this.tokenRenewalTimeout)
+
+    if (event === true) this.notifier.emit('signout')
 
     localStorage.removeItem('access_token')
     localStorage.removeItem('refresh_token')
