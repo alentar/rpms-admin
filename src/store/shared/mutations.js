@@ -9,5 +9,9 @@ export default {
 
   [types.SET_LOADING]: (state, payload) => {
     state.loading = payload
+  },
+
+  [types.SET_SNACKBAR]: (state, payload) => {
+    state.snackbar = payload
   }
 }

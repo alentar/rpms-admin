@@ -7,5 +7,9 @@ export default {
 
   loading (state) {
     return state.loading === true
+  },
+
+  snackbar (state) {
+    return state.snackbar
   }
 }

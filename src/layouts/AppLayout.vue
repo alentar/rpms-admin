@@ -6,64 +6,7 @@
       app
       v-model="drawer"
     >
-      <v-list dense>
-        <template v-for="item in items">
-          <v-layout
-            row
-            v-if="item.heading"
-            align-center
-            :key="item.heading"
-          >
-            <v-flex xs6>
-              <v-subheader v-if="item.heading">
-                {{ item.heading }}
-              </v-subheader>
-            </v-flex>
-            <v-flex xs6 class="text-xs-center">
-              <a href="#!" class="body-2 black--text">EDIT</a>
-            </v-flex>
-          </v-layout>
-          <v-list-group
-            v-else-if="item.children"
-            v-model="item.model"
-            :key="item.text"
-            :prepend-icon="item.model ? item.icon : item['icon-alt']"
-            append-icon=""
-          >
-            <v-list-tile slot="activator">
-              <v-list-tile-content>
-                <v-list-tile-title>
-                  {{ item.text }}
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile
-              v-for="(child, i) in item.children"
-              :key="i"
-              @click=""
-            >
-              <v-list-tile-action v-if="child.icon">
-                <v-icon>{{ child.icon }}</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title>
-                  {{ child.text }}
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </v-list-group>
-          <v-list-tile v-else :to="item.link" :key="item.text">
-            <v-list-tile-action>
-              <v-icon>{{ item.icon }}</v-icon>
-            </v-list-tile-action>
-            <v-list-tile-content>
-              <v-list-tile-title>
-                {{ item.text }}
-              </v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </template>
-      </v-list>
+      <app-main-menu></app-main-menu>
     </v-navigation-drawer>
     <v-toolbar
       color="blue darken-3"
@@ -78,98 +21,61 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn icon>
-        <v-icon>apps</v-icon>
-      </v-btn>
-      <v-btn icon>
         <v-icon>notifications</v-icon>
       </v-btn>
-      <v-menu offset-y position-y="10px">
-        <v-btn icon large slot="activator">
-          <v-avatar size="32px" tile>
-            <img src="/static/user.png">
-          </v-avatar>
-        </v-btn>
-        <v-list>
-          <v-list-tile
-            v-for="item in profileMenu"
-            :key="item.text"
-            @click="invoke(item.action)"
-          >
-            <v-list-tile-action>
-              <v-icon>{{ item.icon }}</v-icon>
-            </v-list-tile-action>
-            <v-list-tile-content>
-              <v-list-tile-title>
-                {{ item.text }}
-              </v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-list>
-      </v-menu>
+      <app-user-menu></app-user-menu>
     </v-toolbar>
-    <template>
-      <v-dialog v-model="signOutDialog" max-width="300">
-        <v-card>
-          <v-card-title class="headline">Realtime Patients Monitoring System</v-card-title>
-          <v-card-text>Do you want to sign out ?</v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="green darken-1" flat="flat" @click.native="signOutDialog = false">Cancel</v-btn>
-            <v-btn color="red darken-1" flat="flat" @click.native="signOut">Signout</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </template>
+
     <v-content>
       <v-container fluid fill-height>
         <router-view></router-view>
       </v-container>
     </v-content>
 
+    <v-snackbar
+      v-if="snackbar"
+      :timeout="snackbar.timeout"
+      :bottom="true"
+      :left="true"
+      v-model="snackbar"
+    >
+      {{ snackbar.text }}
+      <v-btn flat color="pink" @click.native="snackbar = null">Close</v-btn>
+    </v-snackbar>
+
     <v-footer color="blue darken-3" app>
       <v-spacer></v-spacer>
-      <span class="white--text">&copy; 2018</span>
+      <span class="white--text">&copy; 2018 </span>
     </v-footer>
   </div>
 </template>
 
 <script>
+  import UserMenu from '@/components/Application/Menus/UserMenu'
+  import MainMenu from '@/components/Application/Menus/MainMenu'
+
   export default {
     name: 'AppLayout',
-    data () {
-      return {
-        drawer: true,
-        signOutDialog: false,
-        items: [
-          { icon: 'dashboard', text: 'Dashboard', link: '/' },
-          { icon: 'people', text: 'Users', link: '/users' },
-          { icon: 'settings_input_component', text: 'Devices', link: '/devices' },
-          { icon: 'domain', text: 'Wards', link: '/wards' },
-          { icon: 'person', text: 'Patients', link: '/patients' },
-          { icon: 'settings', text: 'Settings', link: '/settings' },
-          { icon: 'chat_bubble', text: 'Send feedback', link: '/feedback' },
-          { icon: 'help', text: 'Help', link: '/help' }
-        ],
-        profileMenu: [
-          { icon: 'person', text: 'Profile', action: 'profile' },
-          { icon: 'exit_to_app', text: 'Sign out', action: 'showSignOut' }
-        ]
+    components: {
+      'app-user-menu': UserMenu,
+      'app-main-menu': MainMenu
+    },
+
+    computed: {
+      snackbar: {
+        get: function () {
+          return this.$store.getters['shared/snackbar']
+        },
+
+        set: function (value) {
+          this.$store.dispatch('shared/showSnackbar', null, {root: true})
+        }
       }
     },
-    methods: {
-      showSignOut () {
-        this.signOutDialog = true
-      },
-      signOut () {
-        this.signOutDialog = false
-        this.$store.dispatch('user/signOut')
-        this.$router.push('/signin')
-      },
-      profile () {
-        this.$router.push('/profile')
-      },
-      invoke (name) {
-        this[name]()
+
+    data () {
+      return {
+        drawer: true
       }
     }
   }

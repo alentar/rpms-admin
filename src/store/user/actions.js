@@ -6,6 +6,7 @@ import rpms from '../../services/rpms'
 export default {
   signIn ({commit}, payload) {
     commit('shared/SET_LOADING', true, {root: true})
+
     return rpms.AuthService
       .signIn(payload.nic, payload.password)
       .then(user => {
@@ -20,7 +21,7 @@ export default {
       })
   },
 
-  autoSignIn ({commit}) {
+  autoSignIn ({commit, dispatch}) {
     commit('shared/SET_LOADING', true, {root: true})
     return rpms.AuthService.autoSignIn()
       .then((user) => {
@@ -29,16 +30,18 @@ export default {
         if (user.role !== 'admin') throw new Error('Unauthorized user')
 
         commit(types.SET_USER, user)
+        commit('shared/SET_LAYOUT', 'app-layout', {root: true})
         return Promise.resolve()
       })
       .catch(() => {
         commit('shared/SET_LOADING', false, {root: true})
-        rpms.AuthService.signOut()
+        dispatch('signOut')
       })
   },
 
-  signOut ({commit}) {
-    rpms.AuthService.signOut()
+  signOut ({commit, dispatch}) {
     commit(types.UNSET_USER)
+    dispatch('shared/reset', {}, {root: true})
+    rpms.AuthService.signOut()
   }
 }
