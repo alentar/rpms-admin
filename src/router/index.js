@@ -5,6 +5,7 @@ import Router from 'vue-router'
 import Signin from '@/pages/Authentication/Signin'
 import Dashboard from '@/pages/Dashboard/Dashboard'
 import Users from '@/pages/Users/Users'
+import User from '@/pages/Users/User'
 import Devices from '@/pages/Devices/Devices'
 import Feedback from '@/pages/Feedback/Feedback'
 import Help from '@/pages/Help/Help'
@@ -41,12 +42,11 @@ export default new Router({
     },
     {
       path: '/users',
-      name: 'Users',
-      component: Users,
-      beforeEnter: AuthGuard,
-      meta: {
-        title: 'Users'
-      }
+      component: { template: '<router-view/>' },
+      children: [
+        { path: '', component: Users, meta: { title: 'Users' }, beforeEnter: AuthGuard },
+        { path: ':id', component: User, props: true, meta: { title: 'User Profile' }, beforeEnter: AuthGuard }
+      ]
     },
     {
       path: '/wards',
