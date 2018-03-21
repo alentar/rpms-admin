@@ -32,9 +32,20 @@
       </v-container>
     </v-content>
 
+    <v-snackbar
+      v-if="snackbar"
+      :timeout="snackbar.timeout"
+      :bottom="true"
+      :left="true"
+      v-model="snackbar"
+    >
+      {{ snackbar.text }}
+      <v-btn flat color="pink">Close</v-btn>
+    </v-snackbar>
+
     <v-footer color="blue darken-3" app>
       <v-spacer></v-spacer>
-      <span class="white--text">&copy; 2018</span>
+      <span class="white--text">&copy; 2018 </span>
     </v-footer>
   </div>
 </template>
@@ -49,6 +60,19 @@
       'app-user-menu': UserMenu,
       'app-main-menu': MainMenu
     },
+
+    computed: {
+      snackbar: {
+        get: function () {
+          return this.$store.getters['shared/snackbar']
+        },
+
+        set: function (value) {
+          this.$store.dispatch('shared/showSnackbar', null, {root: true})
+        }
+      }
+    },
+
     data () {
       return {
         drawer: true
