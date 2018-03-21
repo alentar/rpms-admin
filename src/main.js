@@ -11,9 +11,17 @@ import rpms from './services/rpms'
 
 // filters
 import ToUpperCase from './filters/touppercase'
+import ShortName from './filters/shortname'
+import CapitalizeFirstLetter from './filters/capitalizefirstletter'
+
+// plugins
+import AppPlugin from './plugins/app'
 
 Vue.use(Vuetify)
+Vue.use(AppPlugin, {store})
 Vue.filter('touppercase', ToUpperCase)
+Vue.filter('shortname', ShortName)
+Vue.filter('capitalizefirstletter', CapitalizeFirstLetter)
 
 Vue.config.productionTip = false
 
