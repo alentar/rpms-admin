@@ -40,8 +40,9 @@ export default {
       })
   },
 
-  signOut ({commit}) {
+  signOut ({commit, dispatch}) {
     commit(types.UNSET_USER)
+    dispatch('shared/reset')
     rpms.AuthService.signOut()
   }
 }

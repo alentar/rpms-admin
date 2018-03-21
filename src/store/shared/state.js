@@ -2,5 +2,6 @@
 
 export default {
   layout: 'simple-layout',
-  loading: false
+  loading: false,
+  snackbar: null
 }
