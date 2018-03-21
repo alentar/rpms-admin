@@ -25,7 +25,7 @@
               <td class="text-xs-right">{{ props.item.createdAt | prettydate }}</td>
               <td class="justify-center layout px-0">
                 <template v-if="user.id !== props.item.id">
-                  <v-btn icon class="mx-0" @click="editUser(props.item)">
+                  <v-btn icon class="mx-0" @click="updateUser(props.item)">
                     <v-icon color="cyan">edit</v-icon>
                   </v-btn>
                   <v-btn icon class="mx-0" @click="deleteUser(props.item)">
@@ -56,6 +56,7 @@
 
         </v-flex>
       </v-layout>
+
       <app-user-delete-dialog
         v-if="userForDelete"
         :display="deleteUserDialog"
@@ -63,11 +64,21 @@
         :user="userForDelete"
         @delete="userDeleted">
       </app-user-delete-dialog>
+
+      <app-user-edit-dialog
+        v-if="userForEdit"
+        :display="editUserDialog"
+        @close="closeUpdateUserDialog"
+        :user="userForEdit"
+        @update="userUpdated">
+      </app-user-edit-dialog>
+
       <app-user-create-dialog
         :display="createUserDialog"
         @close="createUserDialog = false"
         @userCreated="addUser">
       </app-user-create-dialog>
+
     </v-container>
 </template>
 
@@ -75,18 +86,22 @@
   import rpms from '@/services/rpms'
   import CreateUserDialog from '@/components/Users/Dialogs/CreateUserDialog'
   import DeleteUserDialog from '@/components/Users/Dialogs/DeleteUserDialog'
+  import EditUserDialog from '@/components/Users/Dialogs/EditUserDialog'
 
   export default {
     components: {
       'app-user-create-dialog': CreateUserDialog,
-      'app-user-delete-dialog': DeleteUserDialog
+      'app-user-delete-dialog': DeleteUserDialog,
+      'app-user-edit-dialog': EditUserDialog
     },
 
     data () {
       return {
         deleteUserDialog: false,
         createUserDialog: false,
+        editUserDialog: false,
         userForDelete: null,
+        userForEdit: null,
         error: null,
         search: '',
         totalItems: 0,
@@ -148,6 +163,22 @@
         this.totalItems++
       },
 
+      updateUser (user) {
+        this.userForEdit = user
+        this.editUserDialog = true
+      },
+
+      userUpdated (user) {
+        const index = this.items.indexOf(this.items.find(item => item.id === user.id))
+        this.items[index] = user
+        this.closeUpdateUserDialog()
+      },
+
+      closeUpdateUserDialog () {
+        this.userForEdit = null
+        this.editUserDialog = false
+      },
+
       deleteUser (user) {
         this.userForDelete = user
         this.deleteUserDialog = true
@@ -159,10 +190,6 @@
         this.totalItems--
         this.userForDelete = null
         this.deleteUserDialog = false
-      },
-
-      editUser (user) {
-        console.log(user)
       },
 
       async getUsers () {

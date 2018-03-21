@@ -25,7 +25,6 @@ export default {
     commit('shared/SET_LOADING', true, {root: true})
     return rpms.AuthService.autoSignIn()
       .then((user) => {
-        console.log('auto sign in')
         commit('shared/SET_LOADING', false, {root: true})
 
         if (user.role !== 'admin') throw new Error('Unauthorized user')

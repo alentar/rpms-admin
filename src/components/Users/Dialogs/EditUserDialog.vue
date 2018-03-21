@@ -2,7 +2,7 @@
   <v-dialog v-model="display" persistent max-width="700px">
     <v-card>
       <v-card-title>
-        <span class="headline">Add User</span>
+        <span class="headline">Edit User</span>
       </v-card-title>
       <v-form ref="form">
         <v-card-text>
@@ -127,7 +127,7 @@
        <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red darken-1" flat="flat" @click.native="close">Close</v-btn>
-          <v-btn color="green darken-1" flat="flat" :loading="loading" :disabled="loading" @click.native="saveUser">Save</v-btn>
+          <v-btn color="green darken-1" flat="flat" :loading="loading" :disabled="loading" @click.native="updateUser">Update</v-btn>
         </v-card-actions>
       </v-form>
     </v-card>
@@ -138,18 +138,19 @@
 import rpms from '@/services/rpms'
 
 export default {
-  props: [ 'display' ],
+  props: [ 'display', 'user' ],
 
   data () {
     return {
-      name: '',
-      nic: '',
-      registerID: '',
-      gender: 'male',
-      title: 'mr',
-      role: 'admin',
+      id: this.user.id,
+      name: this.user.name,
+      nic: this.user.nic,
+      registerID: this.user.registerID,
+      gender: this.user.gender,
+      title: this.user.title,
+      role: this.user.role,
       password: '',
-      contacts: [],
+      contacts: this.user.contacts,
       genders: [
         {text: 'Male', value: 'male'},
         {text: 'Female', value: 'female'}
@@ -195,35 +196,32 @@ export default {
     }
   },
 
-  mounted () {
-    this.clear()
-  },
-
   methods: {
     // saves a user to database
-    saveUser () {
+    updateUser () {
       if (!this.$refs.form.validate()) return
 
       this.loading = true
 
       const user = {
-        name: this.name,
-        nic: this.nic.toLowerCase(),
-        gender: this.gender,
-        title: this.title,
-        role: this.role
+        id: this.id
       }
 
+      user.contacts = this.contacts
       if (this.password.length > 0) user.password = this.password
-      if (this.registerID.length > 0) user.registerID = this.registerID
-      if (this.contacts.length > 0) user.contacts = this.contacts
+      if (this.registerID.length > 0 && this.registerID !== this.user.registerID) user.registerID = this.registerID
+      if (this.name.length > 0 && this.name !== this.user.name) user.name = this.name
+      if (this.nic.length > 0 && this.nic !== this.user.nic) user.nic = this.nic
+      if (this.gender.length > 0 && this.gender !== this.user.gender) user.gender = this.gender
+      if (this.title.length > 0 && this.title !== this.user.title) user.title = this.title
+      if (this.role.length > 0 && this.role !== this.user.role) user.role = this.role
 
       let self = this
-      rpms.User.createUser(user)
+      rpms.User.updateUser(user)
         .then((user) => {
           this.loading = false
-          this.$emit('userCreated', user)
-          this.$app.toast('User created', 3000)
+          this.$emit('update', user)
+          this.$app.toast('User updated successfully')
           this.clear()
           this.close()
         })
@@ -248,14 +246,6 @@ export default {
     // clear form
     clear () {
       this.$refs.form.reset()
-      this.name = ''
-      this.nic = ''
-      this.registerID = ''
-      this.gender = 'male'
-      this.title = 'mr'
-      this.role = 'admin'
-      this.password = ''
-      this.contacts = []
       this.password_hidden = true
       this.error = null
       this.loading = false

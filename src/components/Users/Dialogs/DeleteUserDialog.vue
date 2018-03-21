@@ -6,7 +6,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="green darken-1" flat="flat" @click="$emit('close')">Cancel</v-btn>
-        <v-btn color="red darken-1" flat="flat" @click.native="deleteUser">Delete</v-btn>
+        <v-btn color="red darken-1" flat="flat" :loading="loading" :disabled="loading" @click.native="deleteUser">Delete</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -19,6 +19,12 @@ export default {
   props: [
     'display', 'user'
   ],
+
+  data () {
+    return {
+      loading: false
+    }
+  },
 
   computed: {
     model: {
@@ -34,14 +40,17 @@ export default {
 
   methods: {
     deleteUser () {
+      this.loading = true
       const self = this
       rpms.User.deleteUser(this.user.id)
         .then(() => {
+          this.loading = false
           self.$app.toast('User deleted successfully')
           self.$emit('delete', this.user)
           self.$emit('close')
         })
         .catch((err) => {
+          this.loading = false
           alert(err.message)
         })
     }
