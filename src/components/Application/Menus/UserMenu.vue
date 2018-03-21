@@ -14,7 +14,7 @@
           </v-avatar>
         </v-list-tile-avatar>
         <v-list-tile-content>
-          <v-list-tile-title class="title">{{ user.name.first }} {{ user.name.last }}</v-list-tile-title>
+          <v-list-tile-title class="title">{{ user.title | capitalizefirstletter }}. {{ user.name | shortname }}</v-list-tile-title>
           <v-list-tile-sub-title>{{ user.role | touppercase }}</v-list-tile-sub-title>
         </v-list-tile-content>
       </v-list-tile>
@@ -57,13 +57,15 @@ export default {
     }
   },
 
-  data: () => ({
-    dialog: false,
-    profileMenu: [
-      { icon: 'person', text: 'My Profile', action: 'profile' },
-      { icon: 'exit_to_app', text: 'Sign out', action: 'showSignOut' }
-    ]
-  }),
+  data () {
+    return {
+      dialog: false,
+      profileMenu: [
+        { icon: 'person', text: 'My Profile', action: 'profile' },
+        { icon: 'exit_to_app', text: 'Sign out', action: 'showSignOut' }
+      ]
+    }
+  },
 
   methods: {
     showSignOut () {

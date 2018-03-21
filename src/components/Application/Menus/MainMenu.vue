@@ -60,18 +60,20 @@
 
 <script>
 export default {
-  data: () => ({
-    items: [
-      { icon: 'dashboard', text: 'Dashboard', link: '/' },
-      { icon: 'people', text: 'Users', link: '/users' },
-      { icon: 'settings_input_component', text: 'Devices', link: '/devices' },
-      { icon: 'domain', text: 'Wards', link: '/wards' },
-      { icon: 'person', text: 'Patients', link: '/patients' },
-      { icon: 'settings', text: 'Settings', link: '/settings' },
-      { icon: 'chat_bubble', text: 'Send feedback', link: '/feedback' },
-      { icon: 'help', text: 'Help', link: '/help' }
-    ]
-  })
+  data () {
+    return {
+      items: [
+        { icon: 'dashboard', text: 'Dashboard', link: '/' },
+        { icon: 'people', text: 'Users', link: '/users' },
+        { icon: 'settings_input_component', text: 'Devices', link: '/devices' },
+        { icon: 'domain', text: 'Wards', link: '/wards' },
+        { icon: 'person', text: 'Patients', link: '/patients' },
+        { icon: 'settings', text: 'Settings', link: '/settings' },
+        { icon: 'chat_bubble', text: 'Send feedback', link: '/feedback' },
+        { icon: 'help', text: 'Help', link: '/help' }
+      ]
+    }
+  }
 }
 </script>
 
