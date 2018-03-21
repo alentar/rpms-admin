@@ -39,7 +39,7 @@
       </v-list-tile>
     </v-list>
 
-    <app-signout-dialog :display="dialog" @cancel="dialog = false"></app-signout-dialog>
+    <app-signout-dialog :display="dialog" @close="dialog = false"></app-signout-dialog>
   </v-menu>
 </template>
 

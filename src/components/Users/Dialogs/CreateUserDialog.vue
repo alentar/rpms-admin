@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" persistent max-width="700px">
+  <v-dialog v-model="display" persistent max-width="700px">
     <v-card>
       <v-card-title>
         <span class="headline">Create New User</span>
@@ -138,7 +138,7 @@
 import rpms from '@/services/rpms'
 
 export default {
-  props: [ 'dialog' ],
+  props: [ 'display' ],
 
   data () {
     return {

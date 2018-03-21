@@ -13,15 +13,20 @@ import rpms from './services/rpms'
 import ToUpperCase from './filters/touppercase'
 import ShortName from './filters/shortname'
 import CapitalizeFirstLetter from './filters/capitalizefirstletter'
+import PrettyDate from './filters/prettydate'
 
 // plugins
 import AppPlugin from './plugins/app'
 
+// initilize plugins
 Vue.use(Vuetify)
 Vue.use(AppPlugin, {store})
+
+// filters
 Vue.filter('touppercase', ToUpperCase)
 Vue.filter('shortname', ShortName)
 Vue.filter('capitalizefirstletter', CapitalizeFirstLetter)
+Vue.filter('prettydate', PrettyDate)
 
 Vue.config.productionTip = false
 

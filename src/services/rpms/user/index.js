@@ -42,12 +42,16 @@ export default class User {
     .catch(err => { return Promise.reject(err.response.data) })
   }
 
-  static async getUsers ({page = 1, perPage = 30}) {
+  static async getUsers (page = 1, perPage = 30) {
     return api()
       .get('users', {
         params: {
           page: page,
           perPage: perPage
+        },
+
+        headers: {
+          Authorization: AuthService.accessToken
         }
       })
       .then((res) => { return Promise.resolve(res.data) })

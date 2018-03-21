@@ -40,7 +40,7 @@
       v-model="snackbar"
     >
       {{ snackbar.text }}
-      <v-btn flat color="pink">Close</v-btn>
+      <v-btn flat color="pink" @click.native="snackbar = null">Close</v-btn>
     </v-snackbar>
 
     <v-footer color="blue darken-3" app>
