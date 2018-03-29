@@ -123,11 +123,11 @@ export default {
       loading: true,
       pagination: {},
       headers: [
-        { text: 'Name', align: 'left', sortable: false, value: 'name' },
-        { text: 'NIC', align: 'right', sortable: false, value: 'nic' },
-        { text: 'Role', align: 'right', sortable: false, value: 'role' },
-        { text: 'Gender', align: 'right', sortable: false, value: 'gender' },
-        { text: 'Created At', align: 'right', sortable: false, value: 'createdAt' },
+        { text: 'Name', align: 'left', value: 'name' },
+        { text: 'NIC', align: 'right', value: 'nic' },
+        { text: 'Role', align: 'right', value: 'role' },
+        { text: 'Gender', align: 'right', value: 'gender' },
+        { text: 'Created At', align: 'right', value: 'createdAt' },
         { text: 'Actions', align: 'center', sortable: false, value: 'id' }
       ]
     }
@@ -155,6 +155,8 @@ export default {
   mounted () {
     const self = this
     this.pagination.rowsPerPage = 10
+    this.pagination.sortBy = 'createdAt'
+    this.pagination.descending = true
     this.getUsers().then((data) => {
       self.items = data.users
       self.totalItems = data.total
@@ -209,8 +211,14 @@ export default {
     async getUsers () {
       this.loading = true
       const self = this
-      const { page, rowsPerPage } = this.pagination
-      return rpms.User.getUsers(page, rowsPerPage)
+      const { page, rowsPerPage, sortBy, descending } = this.pagination
+      const options = {
+        page: page,
+        perPage: rowsPerPage,
+        sortBy: sortBy,
+        order: (descending === true ? 'desc' : 'asc')
+      }
+      return rpms.User.getUsers(options)
         .then((data) => {
           self.loading = false
           return Promise.resolve(data)
