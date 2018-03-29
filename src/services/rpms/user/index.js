@@ -42,12 +42,15 @@ export default class User {
     .catch(err => { return Promise.reject(err.response.data) })
   }
 
-  static async getUsers (page = 1, perPage = 30) {
+  static async getUsers ({page = 1, perPage = 30, sortBy = 'createdAt', order = 'desc', role = 'all'}) {
     return api()
       .get('users', {
         params: {
           page: page,
-          perPage: perPage
+          perPage: perPage,
+          sortBy: sortBy,
+          order: order,
+          role: role
         },
 
         headers: {
