@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import rpms from '@/services/rpms'
+import user from '@/services/rpms/user'
 import CreateUserDialog from '@/components/Users/Dialogs/CreateUserDialog'
 import DeleteUserDialog from '@/components/Users/Dialogs/DeleteUserDialog'
 import EditUserDialog from '@/components/Users/Dialogs/EditUserDialog'
@@ -218,7 +218,7 @@ export default {
         sortBy: sortBy,
         order: (descending === true ? 'desc' : 'asc')
       }
-      return rpms.User.getUsers(options)
+      return user.getUsers(options)
         .then((data) => {
           self.loading = false
           return Promise.resolve(data)
