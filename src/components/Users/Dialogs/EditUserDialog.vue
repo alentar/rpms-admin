@@ -221,7 +221,7 @@ export default {
       if (this.role.length > 0 && this.role !== this.user.role) user.role = this.role
 
       let self = this
-      rpms.User.updateUser(user)
+      rpms.user.updateUser(user)
         .then((user) => {
           this.loading = false
           this.$emit('update', user)

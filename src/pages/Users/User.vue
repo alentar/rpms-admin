@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import rpms from '@/services/rpms'
+import user from '@/services/rpms/user'
 
 export default {
   props: ['id'],
@@ -117,7 +117,7 @@ export default {
   },
   mounted () {
     const self = this
-    rpms.User.getUser(this.id)
+    user.getUser(this.id)
       .then((user) => {
         self.user = user
         self.loading = false

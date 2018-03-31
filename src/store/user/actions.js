@@ -7,7 +7,7 @@ export default {
   signIn ({commit}, payload) {
     commit('shared/SET_LOADING', true, {root: true})
 
-    return rpms.AuthService
+    return rpms.auth
       .signIn(payload.nic, payload.password)
       .then(user => {
         commit('shared/SET_LOADING', false, {root: true})
@@ -23,7 +23,7 @@ export default {
 
   autoSignIn ({commit, dispatch}) {
     commit('shared/SET_LOADING', true, {root: true})
-    return rpms.AuthService.autoSignIn()
+    return rpms.auth.autoSignIn()
       .then((user) => {
         commit('shared/SET_LOADING', false, {root: true})
 
@@ -42,6 +42,6 @@ export default {
   signOut ({commit, dispatch}) {
     commit(types.UNSET_USER)
     dispatch('shared/reset', {}, {root: true})
-    rpms.AuthService.signOut()
+    rpms.auth.signOut()
   }
 }

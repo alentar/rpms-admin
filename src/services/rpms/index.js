@@ -1,9 +1,13 @@
 'use strict'
 
-import AuthService from './auth'
-import User from './user'
+import auth from './auth'
+import user from './user'
+import ward from './ward'
+import eventBus from './utils/events'
 
 export default {
-  AuthService: new AuthService(),
-  User
+  auth,
+  user,
+  ward,
+  eventBus
 }

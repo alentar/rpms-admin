@@ -195,7 +195,13 @@ export default {
     },
 
     name (value) {
-      this.name = value.split(' ').map((word) => { return word[0].toUpperCase() + word.substr(1).toLowerCase() }).join(' ')
+      let v = value.trim()
+
+      if (v) {
+        this.name = v.match(/\S+/g).map((word) => {
+          return word[0].toUpperCase() + word.substr(1).toLowerCase()
+        }).join(' ')
+      }
     }
   },
 
@@ -223,15 +229,16 @@ export default {
       if (this.contacts.length > 0) user.contacts = this.contacts
 
       let self = this
-      rpms.User.createUser(user)
+      rpms.user.createUser(user)
         .then((user) => {
-          this.loading = false
-          this.$emit('userCreated', user)
-          this.$app.toast('User created', 3000)
-          this.clear()
-          this.close()
+          self.loading = false
+          self.$emit('userCreated', user)
+          self.$app.toast('User created', 3000)
+          self.clear()
+          self.close()
         })
         .catch(err => {
+          console.log(err)
           this.loading = false
           self.error = err
         })

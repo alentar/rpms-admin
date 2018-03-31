@@ -1,9 +1,7 @@
 import api from '../api'
-import EventEmitter from 'events'
+import eventBus from '../utils/events'
 
-export default class AuthService {
-  notifier = new EventEmitter()
-
+export class AuthService {
   constructor () {
     this.tokenRenewalTimeout = null
   }
@@ -23,7 +21,7 @@ export default class AuthService {
   }
 
   async autoSignIn () {
-    if (!AuthService.isAuthenticated()) {
+    if (!this.isAuthenticated()) {
       throw new Error('Unauthorized user')
     }
 
@@ -32,7 +30,7 @@ export default class AuthService {
     return api()
       .get('users/me', {
         headers: {
-          'Authorization': AuthService.accessToken
+          'Authorization': this.accessToken
         }
       })
       .then((res) => {
@@ -44,21 +42,22 @@ export default class AuthService {
   }
 
   scheduleTokenRenewal () {
-    var expiresAt = AuthService.expiresAt
-    var delay = expiresAt - Date.now()
+    const delay = this.expiresAt - Date.now()
 
     if (delay > 0) {
       const self = this
       this.tokenRenewalTimeout = setTimeout(function () {
         self.renewTokens()
       }, delay)
+    } else {
+      eventBus.emit('signout')
     }
   }
 
   async renewTokens () {
     api()
       .post('auth/refresh/token', {
-        refreshToken: AuthService.refreshToken
+        refreshToken: this.refreshToken
       })
       .then((resp) => {
         this.setSession(resp.data.token)
@@ -82,29 +81,31 @@ export default class AuthService {
     this.scheduleTokenRenewal()
   }
 
-  static isAuthenticated () {
-    if (!AuthService.expiresAt) return false
-    const period = AuthService.expiresAt - Date.now()
+  isAuthenticated () {
+    if (!this.expiresAt) return false
+    const period = this.expiresAt - Date.now()
     return period > 0
   }
 
-  static get expiresAt () {
+  get expiresAt () {
     const val = localStorage.getItem('expires_at')
     return val === null || val === undefined ? null : new Date(val)
   }
 
-  static get refreshToken () {
+  get refreshToken () {
     return localStorage.getItem('refresh_token')
   }
 
-  static get accessToken () {
+  get accessToken () {
+    if (!this.isAuthenticated()) eventBus.emit('signout')
+
     return localStorage.getItem('token_type') + ' ' + localStorage.getItem('access_token')
   }
 
   signOut (event = false) {
     clearTimeout(this.tokenRenewalTimeout)
 
-    if (event === true) this.notifier.emit('signout')
+    if (event === true) eventBus.emit('signout')
 
     localStorage.removeItem('access_token')
     localStorage.removeItem('refresh_token')
@@ -112,3 +113,6 @@ export default class AuthService {
     localStorage.removeItem('token_type')
   }
 }
+
+const auth = new AuthService()
+export default auth
