@@ -78,7 +78,7 @@ export default {
       if (this.name && this.name.trim().length > 0) payload.name = this.name.trim()
 
       const self = this
-      ward.create(payload).then(ward => {
+      ward.createWard(payload).then(ward => {
         self.loading = false
         self.$emit('wardCreated', ward)
         self.$app.toast('Ward created successfully')
