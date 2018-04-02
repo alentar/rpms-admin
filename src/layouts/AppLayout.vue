@@ -20,9 +20,7 @@
         <span class="hidden-sm-and-down">RPMS - Admin</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn icon>
-        <v-icon>notifications</v-icon>
-      </v-btn>
+      <app-notification-menu></app-notification-menu>
       <app-user-menu></app-user-menu>
     </v-toolbar>
 
@@ -51,32 +49,34 @@
 </template>
 
 <script>
-  import UserMenu from '@/components/Application/Menus/UserMenu'
-  import MainMenu from '@/components/Application/Menus/MainMenu'
+import UserMenu from '@/components/Application/Menus/UserMenu'
+import MainMenu from '@/components/Application/Menus/MainMenu'
+import NotificationMenu from '@/components/Application/Menus/NotificationMenu'
 
-  export default {
-    name: 'AppLayout',
-    components: {
-      'app-user-menu': UserMenu,
-      'app-main-menu': MainMenu
-    },
+export default {
+  name: 'AppLayout',
+  components: {
+    'app-user-menu': UserMenu,
+    'app-main-menu': MainMenu,
+    'app-notification-menu': NotificationMenu
+  },
 
-    computed: {
-      snackbar: {
-        get: function () {
-          return this.$store.getters['shared/snackbar']
-        },
+  computed: {
+    snackbar: {
+      get: function () {
+        return this.$store.getters['shared/snackbar']
+      },
 
-        set: function (value) {
-          this.$store.dispatch('shared/showSnackbar', null, {root: true})
-        }
-      }
-    },
-
-    data () {
-      return {
-        drawer: true
+      set: function (value) {
+        this.$store.dispatch('shared/showSnackbar', null, {root: true})
       }
     }
+  },
+
+  data () {
+    return {
+      drawer: true
+    }
   }
+}
 </script>

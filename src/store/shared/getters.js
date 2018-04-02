@@ -11,5 +11,9 @@ export default {
 
   snackbar (state) {
     return state.snackbar
+  },
+
+  notifications (state) {
+    return state.notifications
   }
 }

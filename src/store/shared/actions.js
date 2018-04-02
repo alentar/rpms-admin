@@ -15,6 +15,14 @@ export default {
     commit(types.SET_SNACKBAR, snackbar)
   },
 
+  pushNotification ({commit}, payload) {
+    commit(types.PUSH_NOTIFICATION, payload)
+  },
+
+  pushNotifications ({commit}, payload) {
+    commit(types.PUSH_NOTIFICATIONS, payload)
+  },
+
   reset ({commit}) {
     commit(types.SET_LAYOUT, 'simple-layout')
     commit(types.SET_LOADING, false)
