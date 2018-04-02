@@ -27,7 +27,7 @@
         bottom
         right
         style="bottom: 50px"
-        large
+        medium
         @click="createWardDialog = true"
           >
         <v-icon>add</v-icon>
