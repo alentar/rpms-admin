@@ -2,7 +2,7 @@ import api from '../api'
 import auth from '../auth'
 
 class Ward {
-  async create (payload) {
+  async createWard (payload) {
     return api().post('wards', payload, {
       headers: {
         authorization: auth.accessToken
