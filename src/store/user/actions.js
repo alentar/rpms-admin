@@ -42,6 +42,6 @@ export default {
   signOut ({commit, dispatch}) {
     commit(types.UNSET_USER)
     dispatch('shared/reset', {}, {root: true})
-    rpms.auth.signOut()
+    rpms.auth.signOut(true)
   }
 }

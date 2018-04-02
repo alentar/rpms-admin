@@ -43,11 +43,13 @@ new Vue({
   components: { App },
   template: '<App/>',
   created () {
-    rpms.eventBus.on('signout', () => {
+    rpms.eventBus.once('signout', () => {
       store.dispatch('user/signOut', {root: true})
       router.push('/signin')
     })
+  },
 
+  mounted () {
     store.dispatch('user/autoSignIn', {root: true})
   }
 })
