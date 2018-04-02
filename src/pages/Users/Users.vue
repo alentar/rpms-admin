@@ -13,7 +13,7 @@
             class="elevation-1"
           >
             <template slot="items" slot-scope="props">
-              <td>
+              <td class="text-xs-left">
                 <v-tooltip bottom>
                   <span slot="activator">{{ props.item.name | shortname }}</span>
                   <span>{{ props.item.name }}</span>
