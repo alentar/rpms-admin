@@ -14,8 +14,11 @@
           >
             <template slot="items" slot-scope="props">
               <td class="text-xs-left"><b>{{ props.item.mac }}</b></td>
+              <td class="text-xs-right">{{ props.item.name }}</td>
               <td class="text-xs-right">{{ props.item.chipId }}</td>
-              <td class="text-xs-right">{{ state(props.item) }}</td>
+              <td class="text-xs-right">
+                <v-chip :color="state(props.item).color" text-color="white">{{ state(props.item).state }}</v-chip>
+              </td>
               <td class="text-xs-right">{{ props.item.createdAt | prettydate }}</td>
               <td class="justify-center layout px-0">
                 <template>
@@ -53,14 +56,14 @@
                   </v-tooltip>
 
                   <v-tooltip bottom>
-                    <v-btn icon class="mx-0" slot="activator" @click="alert()">
+                    <v-btn icon class="mx-0" slot="activator" @click="showEditDeviceDialog(props.item)">
                       <v-icon color="cyan">edit</v-icon>
                     </v-btn>
                     <span>Edit Device</span>
                   </v-tooltip>
 
                   <v-tooltip bottom>
-                    <v-btn icon class="mx-0" slot="activator" @click="alert()">
+                    <v-btn icon class="mx-0" slot="activator" @click="showDeleteDeviceDialog(props.item)">
                       <v-icon color="red">delete</v-icon>
                     </v-btn>
                     <span>Remove Device</span>
@@ -69,30 +72,41 @@
               </td>
             </template>
           </v-data-table>
-
-          <v-btn
-            color="pink"
-            fab
-            dark
-            fixed
-            bottom
-            right
-            style="bottom: 50px"
-          >
-            <v-icon>add</v-icon>
-          </v-btn>
-
         </v-flex>
+
+        <app-edit-device-dialog
+          v-if="deviceForEdit"
+          :device="deviceForEdit"
+          :display="editDeviceDialog"
+          @close="closeEditDeviceDialog"
+          @deviceUpdated="deviceUpdated"
+        >
+        </app-edit-device-dialog>
+
+        <app-delete-device-dialog
+          v-if="deviceForDelete"
+          :device="deviceForDelete"
+          :display="deleteDeviceDialog"
+          @close="closeDeleteDeviceDialog"
+          @deviceDeleted="deviceDeleted"
+        >
+        </app-delete-device-dialog>
       </v-layout>
     </v-container>
 </template>
 
 <script>
 import device from '@/services/rpms/device'
+import EditDeviceDialog from '@/components/Devices/Dialogs/EditDeviceDialog'
+import DeleteDeviceDialog from '@/components/Devices/Dialogs/DeleteDeviceDialog'
 
 export default {
   data () {
     return {
+      deviceForDelete: null,
+      deleteDeviceDialog: false,
+      deviceForEdit: null,
+      editDeviceDialog: false,
       error: null,
       search: '',
       totalItems: 0,
@@ -100,13 +114,19 @@ export default {
       loading: true,
       pagination: {},
       headers: [
-        { text: 'Mac', align: 'left', sortable: false, value: 'name' },
-        { text: 'Chip ID', align: 'right', sortable: false, value: 'nic' },
-        { text: 'Status', align: 'right', sortable: false, value: 'role' },
-        { text: 'Created At', align: 'right', sortable: true, value: 'createdAt' },
-        { text: 'Actions', align: 'center', sortable: false, value: 'id' }
+        { text: 'Mac', align: 'left', sortable: false, value: 'mac' },
+        { text: 'Name', align: 'right', sortable: false, value: 'name' },
+        { text: 'Chip ID', align: 'right', sortable: false, value: 'chipId' },
+        { text: 'Status', align: 'right', sortable: true, value: 'status' },
+        { text: 'Created At', align: 'right', sortable: false, value: 'createdAt' },
+        { text: 'Actions', align: 'center', sortable: false, value: 'actions' }
       ]
     }
+  },
+
+  components: {
+    'app-edit-device-dialog': EditDeviceDialog,
+    'app-delete-device-dialog': DeleteDeviceDialog
   },
 
   computed: {
@@ -138,12 +158,47 @@ export default {
   },
 
   methods: {
-    state (device) {
-      if (device.blacklisted === true) return 'Blacklisted'
-      if (device.blacklisted === false && device.authorized === true && device.assigned === false) return 'Authorized'
-      if (device.blacklisted === false && device.authorized === false && device.assigned === false) return 'Unauthorized'
+    // Methods for Deleting device
+    showDeleteDeviceDialog (device) {
+      this.deviceForDelete = device
+      this.deleteDeviceDialog = true
+    },
 
-      return 'Assigned'
+    closeDeleteDeviceDialog () {
+      this.deviceForDelete = null
+      this.deleteDeviceDialog = false
+    },
+
+    deviceDeleted () {
+      this.totalItems--
+      this.closeDeleteDeviceDialog()
+    },
+    // End methods
+
+    // Methods for editing devices
+    showEditDeviceDialog (device) {
+      this.deviceForEdit = device
+      this.editDeviceDialog = true
+    },
+
+    closeEditDeviceDialog () {
+      this.deviceForEdit = null
+      this.editDeviceDialog = false
+    },
+
+    deviceUpdated (device) {
+      const index = this.items.indexOf(this.items.find(item => item._id === device._id))
+      this.items[index] = device
+      this.closeEditDeviceDialog()
+    },
+    // End methods
+
+    state (device) {
+      if (device.blacklisted === true) return {state: 'Blacklisted', color: 'red'}
+      if (device.blacklisted === false && device.authorized === true && device.assigned === false) return {state: 'Authorized', color: 'blue'}
+      if (device.blacklisted === false && device.authorized === false && device.assigned === false) return {state: 'Unauthorized', color: 'orange'}
+
+      return {state: 'Assigned', color: 'green'}
     },
 
     async getDevices () {
