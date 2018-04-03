@@ -21,6 +21,26 @@ class Device {
     .then(res => Promise.resolve(res.data))
     .catch(err => Promise.reject(err.response.data))
   }
+
+  async updateDevice (deviceId, payload) {
+    return api().put(`devices/${deviceId}`, payload, {
+      headers: {
+        authorization: auth.accessToken
+      }
+    })
+    .then(res => Promise.resolve(res.data.device))
+    .catch(err => Promise.reject(err.response.data))
+  }
+
+  async deleteDevice (deviceId) {
+    return api().delete(`devices/${deviceId}`, {
+      headers: {
+        authorization: auth.accessToken
+      }
+    })
+    .then(res => Promise.resolve(res.data))
+    .catch(err => Promise.reject(err.response.data))
+  }
 }
 
 const device = new Device()
