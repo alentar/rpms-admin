@@ -23,33 +23,45 @@
               <td class="justify-center layout px-0">
                 <template>
                   <v-tooltip bottom>
-                    <v-btn icon class="mx-0" slot="activator" @click="$router.push(`devices/${props.item.id}`)">
-                      <v-icon>pageview</v-icon>
+                    <v-btn icon class="mx-0" slot="activator" @click="showViewDeviceDialog(props.item)">
+                      <v-icon>zoom_in</v-icon>
                     </v-btn>
                     <span>View Device</span>
                   </v-tooltip>
 
                   <v-tooltip bottom v-if="props.item.authorized === false">
-                    <v-btn icon class="mx-0" slot="activator" @click="alert()">
+                    <v-btn
+                      icon
+                      class="mx-0"
+                      slot="activator"
+                      @click="showAuthorizeDeviceDialog(props.item)"
+                      :disabled="props.item.blacklisted === true"
+                    >
                       <v-icon color="blue">security</v-icon>
                     </v-btn>
                     <span>Authorize Device</span>
                   </v-tooltip>
                   <v-tooltip bottom v-else>
-                    <v-btn icon class="mx-0" slot="activator" @click="alert()">
+                    <v-btn
+                      icon
+                      class="mx-0"
+                      slot="activator"
+                      @click="showAuthorizeDeviceDialog(props.item)"
+                      :disabled="props.item.blacklisted === true"
+                    >
                       <v-icon color="red accent-2">clear</v-icon>
                     </v-btn>
                     <span>Unauthorize Device</span>
                   </v-tooltip>
 
                   <v-tooltip bottom v-if="props.item.blacklisted === false">
-                    <v-btn icon class="mx-0" slot="activator" @click="alert()">
+                    <v-btn icon class="mx-0" slot="activator" @click="showBlacklistDeviceDialog(props.item)">
                       <v-icon color="red accent-3">block</v-icon>
                     </v-btn>
                     <span>Blacklist Device</span>
                   </v-tooltip>
                   <v-tooltip bottom v-else>
-                    <v-btn icon class="mx-0" slot="activator" @click="alert()">
+                    <v-btn icon class="mx-0" slot="activator" @click="showBlacklistDeviceDialog(props.item)">
                       <v-icon color="indigo darken-1">add_circle</v-icon>
                     </v-btn>
                     <span>Whitelist Device</span>
@@ -91,6 +103,32 @@
           @deviceDeleted="deviceDeleted"
         >
         </app-delete-device-dialog>
+
+        <app-authorize-device-dialog
+          v-if="deviceForAuthorize"
+          :device="deviceForAuthorize"
+          :display="authorizeDeviceDialog"
+          @close="closeAuthorizeDeviceDialog"
+          @deviceAuthChanged="deviceAuthChanged"
+        >
+        </app-authorize-device-dialog>
+
+        <app-blacklist-device-dialog
+          v-if="deviceForBlacklist"
+          :device="deviceForBlacklist"
+          :display="blacklistDeviceDialog"
+          @close="closeBlacklistDeviceDialog"
+          @deviceStateChanged="deviceStateChanged"
+        >
+        </app-blacklist-device-dialog>
+
+        <app-view-device-dialog
+          v-if="deviceForView"
+          :device="deviceForView"
+          :display="viewDeviceDialog"
+          @close="closeViewDeviceDialog"
+        >
+        </app-view-device-dialog>
       </v-layout>
     </v-container>
 </template>
@@ -99,14 +137,28 @@
 import device from '@/services/rpms/device'
 import EditDeviceDialog from '@/components/Devices/Dialogs/EditDeviceDialog'
 import DeleteDeviceDialog from '@/components/Devices/Dialogs/DeleteDeviceDialog'
+import AuthorizeDeviceDialog from '@/components/Devices/Dialogs/AuthorizeDeviceDialog'
+import BlacklistDeviceDialog from '@/components/Devices/Dialogs/BlacklistDeviceDialog'
+import ViewDeviceDialog from '@/components/Devices/Dialogs/ViewDeviceDialog'
 
 export default {
   data () {
     return {
+      viewDeviceDialog: false,
+      deviceForView: null,
+
+      blacklistDeviceDialog: false,
+      deviceForBlacklist: null,
+
+      authorizeDeviceDialog: false,
+      deviceForAuthorize: null,
+
       deviceForDelete: null,
       deleteDeviceDialog: false,
+
       deviceForEdit: null,
       editDeviceDialog: false,
+
       error: null,
       search: '',
       totalItems: 0,
@@ -126,7 +178,10 @@ export default {
 
   components: {
     'app-edit-device-dialog': EditDeviceDialog,
-    'app-delete-device-dialog': DeleteDeviceDialog
+    'app-delete-device-dialog': DeleteDeviceDialog,
+    'app-authorize-device-dialog': AuthorizeDeviceDialog,
+    'app-blacklist-device-dialog': BlacklistDeviceDialog,
+    'app-view-device-dialog': ViewDeviceDialog
   },
 
   computed: {
@@ -158,6 +213,52 @@ export default {
   },
 
   methods: {
+    // Methods for view device
+    closeViewDeviceDialog () {
+      this.viewDeviceDialog = false
+      this.deviceForView = null
+    },
+
+    showViewDeviceDialog (device) {
+      this.viewDeviceDialog = true
+      this.deviceForView = device
+    },
+    // End methods
+
+    // Methods for authorize device
+    closeBlacklistDeviceDialog () {
+      this.blacklistDeviceDialog = false
+      this.deviceForBlacklist = null
+    },
+
+    showBlacklistDeviceDialog (device) {
+      this.blacklistDeviceDialog = true
+      this.deviceForBlacklist = device
+    },
+
+    deviceStateChanged (device) {
+      this.updateDevice(device)
+      this.closeBlacklistDeviceDialog()
+    },
+    // End methods
+
+    // Methods for authorize device
+    closeAuthorizeDeviceDialog () {
+      this.authorizeDeviceDialog = false
+      this.deviceForAuthorize = null
+    },
+
+    showAuthorizeDeviceDialog (device) {
+      this.authorizeDeviceDialog = true
+      this.deviceForAuthorize = device
+    },
+
+    deviceAuthChanged (device) {
+      this.updateDevice(device)
+      this.closeAuthorizeDeviceDialog()
+    },
+    // End methods
+
     // Methods for Deleting device
     showDeleteDeviceDialog (device) {
       this.deviceForDelete = device
@@ -187,11 +288,15 @@ export default {
     },
 
     deviceUpdated (device) {
-      const index = this.items.indexOf(this.items.find(item => item._id === device._id))
-      this.items[index] = device
+      this.updateDevice(device)
       this.closeEditDeviceDialog()
     },
     // End methods
+
+    updateDevice (device) {
+      const index = this.items.indexOf(this.items.find(item => item._id === device._id))
+      this.items[index] = device
+    },
 
     state (device) {
       if (device.blacklisted === true) return {state: 'Blacklisted', color: 'red'}
@@ -223,7 +328,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>
