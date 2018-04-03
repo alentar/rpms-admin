@@ -1,5 +1,5 @@
 <template>
-  <v-menu offset-y fixed :nudge-width="350">
+  <v-menu offset-y fixed bottom left :nudge-width="350">
     <v-btn icon slot="activator">
       <v-badge right overlap color="grey">
         <span slot="badge">6</span>
