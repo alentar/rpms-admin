@@ -41,6 +41,26 @@ class Device {
     .then(res => Promise.resolve(res.data))
     .catch(err => Promise.reject(err.response.data))
   }
+
+  async authorizeDevice (deviceId, authorize) {
+    return api().post(`devices/${deviceId}/${authorize === true ? 'authorize' : 'unauthorize'}`, {}, {
+      headers: {
+        authorization: auth.accessToken
+      }
+    })
+    .then(res => Promise.resolve(res.data.device))
+    .catch(err => Promise.reject(err.response.data))
+  }
+
+  async blacklistDevice (deviceId, blacklist) {
+    return api().post(`devices/${deviceId}/${blacklist === true ? 'blacklist' : 'whitelist'}`, {}, {
+      headers: {
+        authorization: auth.accessToken
+      }
+    })
+    .then(res => Promise.resolve(res.data.device))
+    .catch(err => Promise.reject(err.response.data))
+  }
 }
 
 const device = new Device()
