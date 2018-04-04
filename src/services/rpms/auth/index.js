@@ -55,7 +55,7 @@ export class AuthService {
   }
 
   async renewTokens () {
-    api()
+    return api()
       .post('auth/refresh/token', {
         refreshToken: this.refreshToken
       })
@@ -111,6 +111,8 @@ export class AuthService {
     localStorage.removeItem('refresh_token')
     localStorage.removeItem('expires_at')
     localStorage.removeItem('token_type')
+
+    console.log('done')
   }
 }
 
