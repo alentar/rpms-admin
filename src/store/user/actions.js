@@ -1,19 +1,21 @@
 'use strict'
 
 import * as types from './mutation-types'
-import rpms from '../../services/rpms'
+import auth from '../../services/rpms/auth'
 
 export default {
-  signIn ({commit}, payload) {
+  signIn ({commit, dispatch}, payload) {
     commit('shared/SET_LOADING', true, {root: true})
 
-    return rpms.auth
+    return auth
       .signIn(payload.nic, payload.password)
       .then(user => {
         commit('shared/SET_LOADING', false, {root: true})
         if (user.role !== 'admin') throw new Error('Unauthorized user')
 
         commit(types.SET_USER, user)
+        dispatch('initializeSocketConnection')
+
         return Promise.resolve(user)
       }).catch(err => {
         commit('shared/SET_LOADING', false, {root: true})
@@ -23,7 +25,7 @@ export default {
 
   autoSignIn ({commit, dispatch}) {
     commit('shared/SET_LOADING', true, {root: true})
-    return rpms.auth.autoSignIn()
+    return auth.autoSignIn()
       .then((user) => {
         commit('shared/SET_LOADING', false, {root: true})
 
@@ -31,6 +33,7 @@ export default {
 
         commit(types.SET_USER, user)
         commit('shared/SET_LAYOUT', 'app-layout', {root: true})
+        dispatch('initializeSocketConnection')
         return Promise.resolve()
       })
       .catch(() => {
@@ -42,6 +45,14 @@ export default {
   signOut ({commit, dispatch}) {
     commit(types.UNSET_USER)
     dispatch('shared/reset', {}, {root: true})
-    rpms.auth.signOut(true)
+    this._vm.$socket.close()
+    auth.signOut(true)
+  },
+
+  initializeSocketConnection () {
+    this._vm.$socket.io.opts.query = {
+      token: auth.accessToken
+    }
+    this._vm.$socket.open()
   }
 }

@@ -8,6 +8,8 @@ import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import './styles/css/styles.css'
 import rpms from './services/rpms'
+import VueSocketio from 'vue-socket.io'
+import socketio from 'socket.io-client'
 
 // filters
 import ToUpperCase from './filters/touppercase'
@@ -21,6 +23,7 @@ import AppPlugin from './plugins/app'
 // initilize plugins
 Vue.use(Vuetify)
 Vue.use(AppPlugin, {store})
+Vue.use(VueSocketio, socketio('http://localhost:3000', {autoConnect: false}), store)
 
 // filters
 Vue.filter('touppercase', ToUpperCase)

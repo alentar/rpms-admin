@@ -55,6 +55,31 @@ import NotificationMenu from '@/components/Application/Menus/NotificationMenu'
 
 export default {
   name: 'AppLayout',
+  sockets: {
+    connect: function () {
+      console.log('socket connected')
+    },
+    disconnect: function () {
+      console.log('socket disconnected')
+    },
+    deviceConnected: function (val) {
+      console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)', val)
+    },
+
+    glob (val) {
+      console.log(val)
+    },
+
+    joined (val) {
+      console.log(val)
+    },
+
+    notification (val) {
+      console.log('notification')
+      console.log(val)
+    }
+  },
+
   components: {
     'app-user-menu': UserMenu,
     'app-main-menu': MainMenu,

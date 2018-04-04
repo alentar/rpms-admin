@@ -111,8 +111,6 @@ export class AuthService {
     localStorage.removeItem('refresh_token')
     localStorage.removeItem('expires_at')
     localStorage.removeItem('token_type')
-
-    console.log('done')
   }
 }
 
