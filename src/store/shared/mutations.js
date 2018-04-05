@@ -15,14 +15,6 @@ export default {
     state.snackbar = payload
   },
 
-  [types.PUSH_NOTIFICATION]: (state, payload) => {
-    state.notifications.unshift(payload)
-  },
-
-  [types.PUSH_NOTIFICATIONS]: (state, payload) => {
-    state.notifications.push(...payload)
-  },
-
   [types.SOCKET_CONNECT]: (state, payload) => {
     state.connected = true
   },

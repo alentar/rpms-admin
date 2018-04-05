@@ -13,10 +13,6 @@ export default {
     return state.snackbar
   },
 
-  notifications (state) {
-    return state.notifications
-  },
-
   connected (state) {
     return state.connected
   }

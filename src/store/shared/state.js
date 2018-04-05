@@ -4,6 +4,5 @@ export default {
   layout: 'simple-layout',
   loading: false,
   snackbar: null,
-  notifications: [],
   connected: false
 }

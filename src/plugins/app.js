@@ -9,7 +9,7 @@ export default {
       },
 
       notification (payload) {
-        store.dispatch('shared/pushNotification', payload)
+        store.dispatch('user/pushNotification', payload)
         this.toast(payload.title)
       },
 

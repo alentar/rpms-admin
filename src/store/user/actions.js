@@ -34,6 +34,7 @@ export default {
         commit(types.SET_USER, user)
         commit('shared/SET_LAYOUT', 'app-layout', {root: true})
         dispatch('initializeSocketConnection')
+
         return Promise.resolve()
       })
       .catch(() => {
@@ -54,5 +55,10 @@ export default {
       token: auth.accessToken
     }
     this._vm.$socket.open()
+  },
+
+  pushNotification ({commit}, payload) {
+    commit(types.INCREMENT_UNREAD_NOTIFICATIONS)
+    commit(types.PUSH_NOTIFICATION, payload)
   }
 }

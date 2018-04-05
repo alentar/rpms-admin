@@ -1,8 +1,8 @@
 <template>
-  <v-menu offset-y fixed bottom right :nudge-width="350" :max-height="400">
+  <v-menu offset-y :position-y="50" :position-x="100" fixed bottom right :nudge-width="350" :max-height="400">
     <v-btn icon slot="activator">
       <v-badge right overlap color="grey">
-        <span slot="badge">6</span>
+        <span slot="badge">{{ unread }}</span>
         <v-icon>notifications</v-icon>
       </v-badge>
     </v-btn>
@@ -28,7 +28,11 @@ export default {
 
   computed: {
     notifications () {
-      return this.$store.getters['shared/notifications']
+      return this.$store.getters['user/notifications']
+    },
+
+    unread () {
+      return this.$store.getters['user/unread']
     }
   }
 }
