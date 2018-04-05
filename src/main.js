@@ -16,6 +16,7 @@ import ToUpperCase from './filters/touppercase'
 import ShortName from './filters/shortname'
 import CapitalizeFirstLetter from './filters/capitalizefirstletter'
 import PrettyDate from './filters/prettydate'
+import TimeAgo from './filters/timeago'
 
 // plugins
 import AppPlugin from './plugins/app'
@@ -30,6 +31,7 @@ Vue.filter('touppercase', ToUpperCase)
 Vue.filter('shortname', ShortName)
 Vue.filter('capitalizefirstletter', CapitalizeFirstLetter)
 Vue.filter('prettydate', PrettyDate)
+Vue.filter('timeago', TimeAgo)
 
 Vue.config.productionTip = false
 

@@ -43,7 +43,15 @@
 
     <v-footer color="blue darken-3" app>
       <v-spacer></v-spacer>
-      <span class="white--text">&copy; 2018 </span>
+      <div class="white--text">
+        <v-chip label small color="pink" text-color="white">
+          <v-icon left>supervisor_account</v-icon> {{ userCount || 'No one yet' }}
+        </v-chip>
+        <v-chip label small :color="connected === true ? 'green' : 'red'" text-color="white">
+          {{ connected === true ? 'Online' : 'Offline' }}
+        </v-chip>
+        &copy; 2018
+      </div>
     </v-footer>
   </div>
 </template>
@@ -56,30 +64,14 @@ import NotificationMenu from '@/components/Application/Menus/NotificationMenu'
 export default {
   name: 'AppLayout',
   sockets: {
-    connect: function () {
-      console.log('socket connected')
-    },
-    disconnect: function () {
-      console.log('socket disconnected')
-    },
-    deviceConnected: function (val) {
-      console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)', val)
+    notification (notification) {
+      this.$app.notification(notification)
     },
 
-    glob (val) {
-      console.log(val)
-    },
-
-    joined (val) {
-      console.log(val)
-    },
-
-    notification (val) {
-      console.log('notification')
-      console.log(val)
+    userCount (count) {
+      this.userCount = count
     }
   },
-
   components: {
     'app-user-menu': UserMenu,
     'app-main-menu': MainMenu,
@@ -95,12 +87,17 @@ export default {
       set: function (value) {
         this.$store.dispatch('shared/showSnackbar', null, {root: true})
       }
+    },
+
+    connected () {
+      return this.$store.getters['shared/connected'] === true
     }
   },
 
   data () {
     return {
-      drawer: true
+      drawer: true,
+      userCount: 0
     }
   }
 }

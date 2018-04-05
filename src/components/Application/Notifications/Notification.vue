@@ -2,13 +2,13 @@
   <v-list-tile avatar ripple @click="action()">
     <v-list-tile-avatar>
       <v-avatar size="32px">
-        <img :src="notification.thumbnail">
+        <img :src="$app.serviceUri() + notification.thumbnail">
       </v-avatar>
     </v-list-tile-avatar>
     <v-list-tile-content>
       <v-list-tile-title>{{ notification.title }}</v-list-tile-title>
       <v-list-tile-sub-title class="grey--text">{{ notification.content }}</v-list-tile-sub-title>
-      <span v-if="notification.time" class="time">{{ notification.time | prettydate }}</span>
+      <span class="time">{{ notification.createdAt | timeago }}</span>
     </v-list-tile-content>
     <v-list-tile-action>
       <v-btn icon ripple v-if="!notification.read">
