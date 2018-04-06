@@ -142,7 +142,7 @@ export default {
 
   data () {
     return {
-      id: this.user.id,
+      id: this.user._id,
       name: this.user.name,
       nic: this.user.nic,
       registerID: this.user.registerID,
@@ -196,7 +196,9 @@ export default {
     },
 
     name (value) {
-      this.name = value.split(' ').map((word) => { return word[0].toUpperCase() + word.substr(1) }).join(' ')
+      this.name = value.match(/\S+/g).map((word) => {
+        return word[0].toUpperCase() + word.substr(1).toLowerCase()
+      }).join(' ')
     }
   },
 
@@ -207,9 +209,7 @@ export default {
 
       this.loading = true
 
-      const user = {
-        id: this.id
-      }
+      const user = {}
 
       user.contacts = this.contacts
       if (this.password.length > 0) user.password = this.password
@@ -221,7 +221,7 @@ export default {
       if (this.role.length > 0 && this.role !== this.user.role) user.role = this.role
 
       let self = this
-      rpms.user.updateUser(user)
+      rpms.user.updateUser(this.id, user)
         .then((user) => {
           this.loading = false
           this.$emit('update', user)

@@ -2,7 +2,8 @@
 
 import axios from 'axios'
 
-const axiosInstance = axios.create({baseURL: 'http://localhost:3000/api/'})
+/* global SERVICE_URI */
+const axiosInstance = axios.create({baseURL: `${SERVICE_URI}/api/`})
 
 export default () => {
   return axiosInstance

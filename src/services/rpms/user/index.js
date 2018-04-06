@@ -12,8 +12,8 @@ class User {
     .catch(err => { return Promise.reject(err.response.data) })
   }
 
-  async updateUser (payload) {
-    return api().put(`users/${payload.id}`, payload, {
+  async updateUser (id, payload) {
+    return api().put(`users/${id}`, payload, {
       headers: {
         Authorization: auth.accessToken
       }

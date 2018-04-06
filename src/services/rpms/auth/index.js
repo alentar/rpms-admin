@@ -25,20 +25,7 @@ export class AuthService {
       throw new Error('Unauthorized user')
     }
 
-    await this.renewTokens()
-
-    return api()
-      .get('users/me', {
-        headers: {
-          'Authorization': this.accessToken
-        }
-      })
-      .then((res) => {
-        return Promise.resolve(res.data)
-      })
-      .catch((err) => {
-        return Promise.reject(err.response.data)
-      })
+    return this.renewTokens()
   }
 
   scheduleTokenRenewal () {
@@ -55,13 +42,13 @@ export class AuthService {
   }
 
   async renewTokens () {
-    api()
+    return api()
       .post('auth/refresh/token', {
         refreshToken: this.refreshToken
       })
       .then((resp) => {
         this.setSession(resp.data.token)
-        return Promise.resolve()
+        return Promise.resolve(resp.data.user)
       })
       .catch(() => {
         this.signOut(true)

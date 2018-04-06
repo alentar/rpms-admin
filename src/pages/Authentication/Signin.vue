@@ -86,6 +86,7 @@
         .then(() => {
           this.$store.dispatch('shared/changeAppLayout', 'app-layout')
           this.$router.push('/')
+          this.$socket.open()
         })
         .catch(error => { vm.error = error })
       }
