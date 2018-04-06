@@ -42,7 +42,7 @@ export default {
     deleteUser () {
       this.loading = true
       const self = this
-      rpms.user.deleteUser(this.user.id)
+      rpms.user.deleteUser(this.user._id)
         .then(() => {
           this.loading = false
           self.$app.toast('User deleted successfully')

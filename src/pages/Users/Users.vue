@@ -24,9 +24,9 @@
               <td class="text-xs-right">{{ props.item.gender | capitalizefirstletter }}</td>
               <td class="text-xs-right">{{ props.item.createdAt | prettydate }}</td>
               <td class="justify-center layout px-0">
-                <template v-if="user.id !== props.item.id">
+                <template v-if="user._id !== props.item._id">
                   <v-tooltip bottom>
-                    <v-btn icon class="mx-0" slot="activator" @click="$router.push(`users/${props.item.id}`)">
+                    <v-btn icon class="mx-0" slot="activator" @click="$router.push(`users/${props.item._id}`)">
                       <v-icon>account_circle</v-icon>
                     </v-btn>
                     <span>View Profile</span>

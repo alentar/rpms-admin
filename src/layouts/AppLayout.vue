@@ -66,6 +66,7 @@ export default {
   sockets: {
     notification (notification) {
       this.$app.notification(notification)
+      this.play(this.audios.newDeviceConnected)
     },
 
     userCount (count) {
@@ -97,7 +98,16 @@ export default {
   data () {
     return {
       drawer: true,
-      userCount: 0
+      userCount: 0,
+      audios: {
+        'newDeviceConnected': new Audio('/static/device-wants-to-connect.mp3')
+      }
+    }
+  },
+
+  methods: {
+    play (audio) {
+      audio.play()
     }
   }
 }

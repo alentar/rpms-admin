@@ -1,5 +1,5 @@
 <template>
-  <v-menu offset-y :position-y="50" :position-x="100" fixed bottom right :nudge-width="350" :max-height="400">
+  <v-menu v-model="value" offset-y :position-y="50" :position-x="100" fixed bottom right :nudge-width="350" :max-height="400">
     <v-btn icon slot="activator">
       <v-badge right overlap color="grey">
         <span slot="badge">{{ unread }}</span>
@@ -24,6 +24,12 @@ import Notification from '../Notifications/Notification'
 export default {
   components: {
     'app-notification': Notification
+  },
+
+  data () {
+    return {
+      value: false
+    }
   },
 
   computed: {
