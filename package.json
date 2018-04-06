@@ -17,7 +17,6 @@
   "dependencies": {
     "axios": "^0.18.0",
     "events": "^2.0.0",
-    "javascript-time-ago": "^1.0.30",
     "lodash": "^4.17.5",
     "moment": "^2.21.0",
     "node-sass": "^4.7.2",
