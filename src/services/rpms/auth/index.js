@@ -29,7 +29,8 @@ export class AuthService {
   }
 
   scheduleTokenRenewal () {
-    const delay = this.expiresAt - Date.now()
+    // set delay to be 5 secs before
+    const delay = Math.abs(this.expiresAt - (Date.now() + 5000))
 
     if (delay > 0) {
       const self = this
