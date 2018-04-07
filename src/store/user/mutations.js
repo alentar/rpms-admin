@@ -12,14 +12,29 @@ export default {
   },
 
   [types.PUSH_NOTIFICATION]: (state, payload) => {
-    state.user.notifications.unshift(payload)
+    state.notifications.unshift(payload)
+  },
+
+  [types.MARK_NOTIFICATION_AS_READ]: (state, payload) => {
+    const i = state.notifications.findIndex((notification) => notification._id === payload._id)
+    const elem = state.notifications[i]
+    elem.read = payload.read
+    state.notifications[i] = elem
+  },
+
+  [types.SET_NOTIFICATIONS]: (state, payload) => {
+    state.notifications = payload
   },
 
   [types.INCREMENT_UNREAD_NOTIFICATIONS]: (state, payload = 1) => {
-    state.user.unread = Number(state.user.unread) + payload
+    state.unread += payload
   },
 
   [types.DECCREMENT_UNREAD_NOTIFICATIONS]: (state, payload = 1) => {
-    state.user.unread = Math.max(0, Number(state.user.unread) - payload)
+    state.unread -= payload
+  },
+
+  [types.SET_UNREAD]: (state, payload) => {
+    state.unread = payload
   }
 }

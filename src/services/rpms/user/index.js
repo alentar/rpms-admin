@@ -60,6 +60,17 @@ class User {
       .then((res) => { return Promise.resolve(res.data) })
       .catch((err) => { return Promise.reject(err.response.data) })
   }
+
+  async markNotificationAsRead (notificationID, read) {
+    return api()
+      .put(`users/me/notifications/${notificationID}?read=${read}`, {}, {
+        headers: {
+          Authorization: auth.accessToken
+        }
+      })
+      .then(result => Promise.resolve(result.data))
+      .catch(err => Promise.reject(err.response.data))
+  }
 }
 
 const user = new User()

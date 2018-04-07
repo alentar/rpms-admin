@@ -10,10 +10,10 @@ export default {
   },
 
   notifications (state) {
-    return state.user.notifications
+    return state.notifications
   },
 
   unread (state) {
-    return Number(state.user.unread)
+    return Number(state.unread)
   }
 }
