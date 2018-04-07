@@ -59,10 +59,11 @@
 <script>
 import UserMenu from '@/components/Application/Menus/UserMenu'
 import MainMenu from '@/components/Application/Menus/MainMenu'
-import NotificationMenu from '@/components/Application/Menus/NotificationMenu'
+import NotificationMenu from '@/components/Application/Menus/Notifications/NotificationMenu'
 
 export default {
   name: 'AppLayout',
+
   sockets: {
     notification (notification) {
       this.$app.notification(notification)
@@ -73,6 +74,7 @@ export default {
       this.userCount = count
     }
   },
+
   components: {
     'app-user-menu': UserMenu,
     'app-main-menu': MainMenu,

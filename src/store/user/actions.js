@@ -2,6 +2,7 @@
 
 import * as types from './mutation-types'
 import auth from '../../services/rpms/auth'
+import user from '../../services/rpms/user'
 
 export default {
   signIn ({commit, dispatch}, payload) {
@@ -13,8 +14,8 @@ export default {
         commit('shared/SET_LOADING', false, {root: true})
         if (user.role !== 'admin') throw new Error('Unauthorized user')
 
-        commit(types.SET_USER, user)
         dispatch('initializeSocketConnection')
+        dispatch('initalize', user)
 
         return Promise.resolve(user)
       }).catch(err => {
@@ -31,9 +32,9 @@ export default {
 
         if (user.role !== 'admin') throw new Error('Unauthorized user')
 
-        commit(types.SET_USER, user)
-        commit('shared/SET_LAYOUT', 'app-layout', {root: true})
         dispatch('initializeSocketConnection')
+        dispatch('initalize', user)
+        commit('shared/SET_LAYOUT', 'app-layout', {root: true})
 
         return Promise.resolve()
       })
@@ -45,9 +46,17 @@ export default {
 
   signOut ({commit, dispatch}) {
     commit(types.UNSET_USER)
+    commit(types.SET_UNREAD, 0)
+    commit(types.SET_NOTIFICATIONS, [])
     dispatch('shared/reset', {}, {root: true})
     this._vm.$socket.close()
     auth.signOut(true)
+  },
+
+  initalize ({commit}, user) {
+    commit(types.SET_USER, user)
+    commit(types.SET_UNREAD, user.unread)
+    commit(types.SET_NOTIFICATIONS, user.notifications)
   },
 
   initializeSocketConnection () {
@@ -60,5 +69,17 @@ export default {
   pushNotification ({commit}, payload) {
     commit(types.INCREMENT_UNREAD_NOTIFICATIONS)
     commit(types.PUSH_NOTIFICATION, payload)
+  },
+
+  markNotificationAsRead ({commit}, notification) {
+    user.markNotificationAsRead(notification._id, notification.read)
+      .then(payload => {
+        commit(types.MARK_NOTIFICATION_AS_READ, payload)
+        if (payload.read === true) commit(types.DECCREMENT_UNREAD_NOTIFICATIONS)
+        else commit(types.INCREMENT_UNREAD_NOTIFICATIONS)
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 }

@@ -1,5 +1,7 @@
 'use strict'
 
 export default {
-  user: null
+  user: null,
+  notifications: [],
+  unread: 0
 }
