@@ -12,7 +12,7 @@
             <div class="display-2">Ward</div>
             <div class="display-1">{{ ward.number }}</div>
             <div class="subheading">{{ ward.name }}</div>
-            <div class="body-2">{{ ward.beds.length !== 0 ? ward.beds.length : 'No' }} Beds</div>
+            <div class="body-2">{{ ward.beds !== 0 ? ward.beds : 'No' }} Beds</div>
             <v-btn color="green darken-1" icon><v-icon>visibility</v-icon></v-btn>
             <v-btn color="indigo darken-2" icon @click="updateWard(ward)"><v-icon>mode_edit</v-icon></v-btn>
             <v-btn color="red darken-1" icon @click="deleteWard(ward)"><v-icon>delete</v-icon></v-btn>
