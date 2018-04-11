@@ -46,7 +46,7 @@ new Vue({
   components: { App },
   template: '<App/>',
   created () {
-    rpms.eventBus.once('signout', () => {
+    rpms.eventBus.on('signout', () => {
       store.dispatch('user/signOut', {root: true})
       router.push('/signin')
     })
