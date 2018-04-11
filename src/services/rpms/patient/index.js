@@ -1,0 +1,67 @@
+'use strict'
+
+import api from '../api'
+import auth from '../auth'
+
+class Patient {
+  async admitPatient (payload) {
+    return api().post('patients', payload, {
+      headers: auth.accessToken
+    })
+    .then(res => Promise.resolve(res.data.patient))
+    .catch(err => Promise.reject(err.response.data))
+  }
+
+  async dischargePatient (patientID) {
+    return api().delete(`patients/discharge/${patientID}`, {
+      headers: auth.accessToken
+    })
+    .then(res => Promise.resolve(res.data.patient))
+    .catch(err => Promise.reject(err.response.data))
+  }
+
+  async deletePatient (patientID) {
+    return api().delete(`patients/${patientID}`, {
+      headers: auth.accessToken
+    })
+    .then(res => Promise.resolve(res.data.patient))
+    .catch(err => Promise.reject(err.response.data))
+  }
+
+  async updatePatient (patientID, payload) {
+    return api().put(`patients/${patientID}`, {payload}, {
+      headers: auth.accessToken
+    })
+    .then(res => Promise.resolve(res.data.patient))
+    .catch(err => Promise.reject(err.response.data))
+  }
+
+  async getPatient (patientID) {
+    return api().put(`patients/${patientID}`, {
+      headers: auth.accessToken
+    })
+    .then(res => Promise.resolve(res.data.patient))
+    .catch(err => Promise.reject(err.response.data))
+  }
+
+  async getDevices ({page = 1, perPage = 30, sortBy = 'createdAt', order = 'desc', type = 'all'}) {
+    return api().get('devices', {
+      params: {
+        page: page,
+        perPage: perPage,
+        sortBy: sortBy,
+        order: order,
+        type: type
+      },
+
+      headers: {
+        authorization: auth.accessToken
+      }
+    })
+    .then(res => Promise.resolve(res.data))
+    .catch(err => Promise.reject(err.response.data))
+  }
+}
+
+const patient = new Patient()
+export default patient

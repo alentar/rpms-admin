@@ -85,7 +85,7 @@ export class AuthService {
   }
 
   get accessToken () {
-    if (!this.isAuthenticated()) eventBus.emit('signout')
+    if (!this.isAuthenticated()) this.signOut(true)
 
     return localStorage.getItem('token_type') + ' ' + localStorage.getItem('access_token')
   }
