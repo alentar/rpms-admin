@@ -37,7 +37,7 @@
                       @click="showAuthorizeDeviceDialog(props.item)"
                       :disabled="props.item.authorized === false"
                     >
-                      <v-icon color="blue">link</v-icon>
+                      <v-icon color="blue">mdi-link-variant</v-icon>
                     </v-btn>
                     <span>Attach device to a bed</span>
                   </v-tooltip>
@@ -49,7 +49,7 @@
                       @click="showAuthorizeDeviceDialog(props.item)"
                       :disabled="props.item.authorized === false"
                     >
-                      <v-icon color="red accent-2">remove_circle</v-icon>
+                      <v-icon color="red accent-2">mdi-link-variant-off</v-icon>
                     </v-btn>
                     <span>Detach Device</span>
                   </v-tooltip>
