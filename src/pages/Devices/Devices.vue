@@ -29,6 +29,31 @@
                     <span>View Device</span>
                   </v-tooltip>
 
+                  <v-tooltip bottom v-if="props.item.assigned === false">
+                    <v-btn
+                      icon
+                      class="mx-0"
+                      slot="activator"
+                      @click="showAuthorizeDeviceDialog(props.item)"
+                      :disabled="props.item.authorized === false"
+                    >
+                      <v-icon color="blue">link</v-icon>
+                    </v-btn>
+                    <span>Attach device to a bed</span>
+                  </v-tooltip>
+                  <v-tooltip bottom v-else>
+                    <v-btn
+                      icon
+                      class="mx-0"
+                      slot="activator"
+                      @click="showAuthorizeDeviceDialog(props.item)"
+                      :disabled="props.item.authorized === false"
+                    >
+                      <v-icon color="red accent-2">remove_circle</v-icon>
+                    </v-btn>
+                    <span>Detach Device</span>
+                  </v-tooltip>
+
                   <v-tooltip bottom v-if="props.item.authorized === false">
                     <v-btn
                       icon

@@ -44,14 +44,13 @@ class Patient {
     .catch(err => Promise.reject(err.response.data))
   }
 
-  async getDevices ({page = 1, perPage = 30, sortBy = 'createdAt', order = 'desc', type = 'all'}) {
-    return api().get('devices', {
+  async getPatients ({page = 1, perPage = 30, sortBy = 'createdAt', order = 'desc'}) {
+    return api().get('patients', {
       params: {
         page: page,
         perPage: perPage,
         sortBy: sortBy,
-        order: order,
-        type: type
+        order: order
       },
 
       headers: {
