@@ -15,7 +15,7 @@
         </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="green darken-1" flat="flat" @click="$emit('close')">Cancel</v-btn>
+        <v-btn color="green darken-1" flat="flat" @click.stop="$emit('close')">Cancel</v-btn>
         <v-btn color="red darken-1" flat="flat" :loading="loading" :disabled="loading" @click.native="takeAction">{{ action }}</v-btn>
       </v-card-actions>
     </v-card>

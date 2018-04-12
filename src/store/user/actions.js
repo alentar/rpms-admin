@@ -50,7 +50,7 @@ export default {
     commit(types.SET_NOTIFICATIONS, [])
     dispatch('shared/reset', {}, {root: true})
     this._vm.$socket.close()
-    auth.signOut(true)
+    auth.signOut()
   },
 
   initalize ({commit}, user) {
