@@ -12,10 +12,10 @@
             <div class="display-2">Ward</div>
             <div class="display-1">{{ ward.number }}</div>
             <div class="subheading">{{ ward.name }}</div>
-            <div class="body-2">{{ ward.beds.length !== 0 ? ward.beds.length : 'No' }} Beds</div>
+            <div class="body-2">{{ getNumberOfBeds(ward) }} Beds</div>
             <v-btn color="green darken-1" icon><v-icon>visibility</v-icon></v-btn>
-            <v-btn color="indigo darken-2" icon @click="updateWard(ward)"><v-icon>mode_edit</v-icon></v-btn>
-            <v-btn color="red darken-1" icon @click="deleteWard(ward)"><v-icon>delete</v-icon></v-btn>
+            <v-btn color="indigo darken-2" icon @click.native.stop="updateWard(ward)"><v-icon>mode_edit</v-icon></v-btn>
+            <v-btn color="red darken-1" icon @click.native.stop="deleteWard(ward)"><v-icon>delete</v-icon></v-btn>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -104,9 +104,9 @@ export default {
   methods: {
     async getWards () {
       this.loading = true
-      return ward.getWards().then((wards) => {
+      return ward.getWards().then((res) => {
         this.loading = false
-        return Promise.resolve(wards)
+        return Promise.resolve(res.wards)
       }).catch(err => {
         this.loading = false
         console.log(err)
@@ -145,6 +145,16 @@ export default {
     closeUpdateUserDialog () {
       this.editWardDialog = false
       this.wardForEdit = null
+    },
+
+    getNumberOfBeds (ward) {
+      let val = 0
+      if (ward.beds) {
+        if (Array.isArray(ward.beds)) val = ward.beds.length
+        if (typeof ward.beds === 'number') val = ward.beds
+      }
+
+      return (val === 0 ? 'No' : val)
     }
   }
 }

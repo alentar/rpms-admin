@@ -23,7 +23,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red darken-1" flat="flat" @click.native="close">Close</v-btn>
+          <v-btn color="red darken-1" flat="flat" @click.stop="close">Close</v-btn>
           <v-btn color="green darken-1" flat="flat" :loading="loading" :disabled="loading" @click.native="updateDevice">Save</v-btn>
         </v-card-actions>
       </v-form>

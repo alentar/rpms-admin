@@ -1,19 +1,19 @@
 <template>
-  <div >
+  <v-layout wrap>
+    <div>
     <v-avatar
     :tile="false"
     :size="150"
     class="grey lighten-4"
     align-center
     >
-    <img src="/static/user.png" alt="avatar">
-    
-    </v-avatar>
-    
+    <img src="/static/user.png" alt="avatar">    
+    </v-avatar>   
     <h4 class="title">{{Username}}
     <br>
     </h4>
-  </div>
+    </div>
+  </v-layout>
 </template>
 <script>
 export default {
