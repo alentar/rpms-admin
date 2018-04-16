@@ -6,6 +6,7 @@ import { store } from './store'
 import router from './router'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
+import 'mdi/css/materialdesignicons.min.css'
 import './styles/css/styles.css'
 import rpms from './services/rpms'
 import VueSocketio from 'vue-socket.io'
@@ -46,7 +47,7 @@ new Vue({
   components: { App },
   template: '<App/>',
   created () {
-    rpms.eventBus.once('signout', () => {
+    rpms.eventBus.on('signout', () => {
       store.dispatch('user/signOut', {root: true})
       router.push('/signin')
     })

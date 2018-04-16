@@ -27,13 +27,26 @@ class Ward {
     })
   }
 
+  async getWard (id) {
+    return api().get(`wards/${id}`, {
+      headers: {
+        authorization: auth.accessToken
+      }
+    }).then((res) => {
+      return Promise.resolve(res.data.ward)
+    })
+    .catch(err => {
+      return Promise.reject(err.response.data)
+    })
+  }
+
   async getWards () {
     return api().get('wards?perPage=-1', {
       headers: {
         authorization: auth.accessToken
       }
     }).then((res) => {
-      return Promise.resolve(res.data.wards)
+      return Promise.resolve(res.data)
     })
     .catch(err => {
       return Promise.reject(err.response.data)
