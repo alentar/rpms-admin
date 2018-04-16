@@ -12,6 +12,7 @@ import Help from '@/pages/Help/Help'
 import Patients from '@/pages/Patients/Patients'
 import Settings from '@/pages/Settings/Settings'
 import Wards from '@/pages/Wards/Wards'
+import Ward from '@/pages/Wards/Ward'
 import Profile from '@/pages/Profile/Profile'
 
 // Guards
@@ -51,11 +52,11 @@ export default new Router({
     {
       path: '/wards',
       name: 'Wards',
-      component: Wards,
-      beforeEnter: AuthGuard,
-      meta: {
-        title: 'Wards'
-      }
+      component: { template: '<router-view/>' },
+      children: [
+        { path: '', component: Wards, meta: { title: 'Wards' }, beforeEnter: AuthGuard },
+        { path: ':id', component: Ward, props: true, meta: { title: 'Ward' }, beforeEnter: AuthGuard }
+      ]
     },
     {
       path: '/devices',

@@ -14,6 +14,18 @@ class Ward {
       return Promise.reject(err.response.data)
     })
   }
+  async getWard (id) {
+    return api().get(`wards/${id}`, {
+      headers: {
+        authorization: auth.accessToken
+      }
+    }).then((res) => {
+      return Promise.resolve(res.data.ward)
+    })
+    .catch(err => {
+      return Promise.reject(err.response.data)
+    })
+  }
 
   async getWard (id) {
     return api().get(`wards/${id}`, {
