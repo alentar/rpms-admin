@@ -4,15 +4,14 @@
     <v-layout row wrap>
       <v-flex xs12 v-if="wards.length === 0 && loading === false">
         <div class="display-3">There are no wards here</div>
-        <div class="display-1">Add some...</div>
+        <div class="display-1">Add wards</div>
       </v-flex>
       <v-flex xs3 v-for="ward in wards" :key="ward._id">
         <v-card dark color="light-blue accent-4" height="200px" class="text-xs-center">
           <v-card-text class="px-0">
-            <div class="display-2">Ward</div>
-            <div class="display-1">{{ ward.number }}</div>
+            <v-btn color="blue" size="small" @click="$router.push(`wards/${ward._id}`)">Ward {{ ward.number }}</v-btn>           
             <div class="subheading">{{ ward.name }}</div>
-            <div class="body-2">{{ ward.beds.length !== 0 ? ward.beds.length : 'No' }} Beds</div>
+            <div class="subheading">{{ ward.beds.length !== 0 ? ward.beds.length : 'No' }} Beds</div>
             <v-btn color="green darken-1" icon><v-icon>visibility</v-icon></v-btn>
             <v-btn color="indigo darken-2" icon @click="updateWard(ward)"><v-icon>mode_edit</v-icon></v-btn>
             <v-btn color="red darken-1" icon @click="deleteWard(ward)"><v-icon>delete</v-icon></v-btn>
