@@ -24,7 +24,9 @@ import AppPlugin from './plugins/app'
 // initilize plugins
 Vue.use(Vuetify)
 Vue.use(AppPlugin, {store})
-Vue.use(VueSocketio, socketio('http://localhost:3000', {autoConnect: false}), store)
+
+/* global SERVICE_URI */
+Vue.use(VueSocketio, socketio(SERVICE_URI, {autoConnect: false}), store)
 
 // filters
 Vue.filter('touppercase', ToUpperCase)
