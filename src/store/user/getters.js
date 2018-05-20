@@ -15,5 +15,13 @@ export default {
 
   unread (state) {
     return Number(state.unread)
+  },
+
+  role (state) {
+    return state.user.role
+  },
+
+  acl (state) {
+    return ['admin', 'doctor', 'nurse'].indexOf(state.user.role)
   }
 }
