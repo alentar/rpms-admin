@@ -61,6 +61,16 @@ class Device {
     .then(res => Promise.resolve(res.data.device))
     .catch(err => Promise.reject(err.response.data))
   }
+
+  async attachDevice (attach = true, deviceId, wardId, bedId) {
+    return api().put(`devices/${deviceId}/${attach === true ? 'attach' : 'detach'}/${wardId}/${bedId}`, {}, {
+      headers: {
+        authorization: auth.accessToken
+      }
+    })
+    .then(res => Promise.resolve(res.data.device))
+    .catch(err => Promise.reject(err.response.data))
+  }
 }
 
 const device = new Device()

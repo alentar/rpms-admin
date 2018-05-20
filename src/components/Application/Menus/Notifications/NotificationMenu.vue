@@ -13,7 +13,7 @@
   >
     <v-btn icon slot="activator">
       <v-badge right overlap color="grey">
-        <span slot="badge">{{ unread }}</span>
+        <span slot="badge" v-if="unread > 0">{{ unread }}</span>
         <v-icon>notifications</v-icon>
       </v-badge>
     </v-btn>

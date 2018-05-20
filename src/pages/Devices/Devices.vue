@@ -13,7 +13,10 @@
             class="elevation-1"
           >
             <template slot="items" slot-scope="props">
-              <td class="text-xs-left"><b>{{ props.item.mac }}</b></td>
+              <td class="text-xs-left">
+                <b>{{ props.item.mac }}</b>
+                <v-chip color="primary" text-color="white" small v-if="props.item.new === true">new</v-chip>
+              </td>
               <td class="text-xs-right">{{ props.item.name }}</td>
               <td class="text-xs-right">{{ props.item.chipId }}</td>
               <td class="text-xs-right">
@@ -27,6 +30,31 @@
                       <v-icon>zoom_in</v-icon>
                     </v-btn>
                     <span>View Device</span>
+                  </v-tooltip>
+
+                  <v-tooltip bottom v-if="props.item.assigned === false">
+                    <v-btn
+                      icon
+                      class="mx-0"
+                      slot="activator"
+                      @click="showAttachDeviceDialog(props.item)"
+                      :disabled="props.item.authorized === false"
+                    >
+                      <v-icon color="blue">mdi-link-variant</v-icon>
+                    </v-btn>
+                    <span>Attach device to a bed</span>
+                  </v-tooltip>
+                  <v-tooltip bottom v-else>
+                    <v-btn
+                      icon
+                      class="mx-0"
+                      slot="activator"
+                      @click="showAttachDeviceDialog(props.item)"
+                      :disabled="props.item.authorized === false"
+                    >
+                      <v-icon color="red accent-2">mdi-link-variant-off</v-icon>
+                    </v-btn>
+                    <span>Detach Device</span>
                   </v-tooltip>
 
                   <v-tooltip bottom v-if="props.item.authorized === false">
@@ -46,7 +74,7 @@
                       icon
                       class="mx-0"
                       slot="activator"
-                      @click="showAuthorizeDeviceDialog(props.item)"
+                      @click.stop="showAuthorizeDeviceDialog(props.item)"
                       :disabled="props.item.blacklisted === true"
                     >
                       <v-icon color="red accent-2">clear</v-icon>
@@ -129,6 +157,15 @@
           @close="closeViewDeviceDialog"
         >
         </app-view-device-dialog>
+
+        <app-attach-device-dialog
+          v-if="deviceForAttach"
+          :device="deviceForAttach"
+          :display="attachDeviceDialog"
+          @close="closeAttachDeviceDialog"
+          @deviceAuthChanged="deviceUpdated"
+        >
+        </app-attach-device-dialog>
       </v-layout>
     </v-container>
 </template>
@@ -140,10 +177,14 @@ import DeleteDeviceDialog from '@/components/Devices/Dialogs/DeleteDeviceDialog'
 import AuthorizeDeviceDialog from '@/components/Devices/Dialogs/AuthorizeDeviceDialog'
 import BlacklistDeviceDialog from '@/components/Devices/Dialogs/BlacklistDeviceDialog'
 import ViewDeviceDialog from '@/components/Devices/Dialogs/ViewDeviceDialog'
+import AttachDeviceDialog from '@/components/Devices/Dialogs/AttachDeviceDialog'
 
 export default {
   data () {
     return {
+      attachDeviceDialog: false,
+      deviceForAttach: null,
+
       viewDeviceDialog: false,
       deviceForView: null,
 
@@ -181,11 +222,8 @@ export default {
     'app-delete-device-dialog': DeleteDeviceDialog,
     'app-authorize-device-dialog': AuthorizeDeviceDialog,
     'app-blacklist-device-dialog': BlacklistDeviceDialog,
-    'app-view-device-dialog': ViewDeviceDialog
-  },
-
-  computed: {
-
+    'app-view-device-dialog': ViewDeviceDialog,
+    'app-attach-device-dialog': AttachDeviceDialog
   },
 
   watch: {
@@ -212,7 +250,25 @@ export default {
     })
   },
 
+  sockets: {
+    device (device) {
+      device.new = true
+      this.items.unshift(device)
+    }
+  },
+
   methods: {
+    // Methods for attach device
+    closeAttachDeviceDialog () {
+      this.attachDeviceDialog = false
+      this.deviceForAttach = null
+    },
+
+    showAttachDeviceDialog (device) {
+      this.attachDeviceDialog = true
+      this.deviceForAttach = device
+    },
+
     // Methods for view device
     closeViewDeviceDialog () {
       this.viewDeviceDialog = false
