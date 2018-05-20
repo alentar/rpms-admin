@@ -13,7 +13,10 @@
             class="elevation-1"
           >
             <template slot="items" slot-scope="props">
-              <td class="text-xs-left"><b>{{ props.item.mac }}</b></td>
+              <td class="text-xs-left">
+                <b>{{ props.item.mac }}</b>
+                <v-chip color="primary" text-color="white" small v-if="props.item.new === true">new</v-chip>
+              </td>
               <td class="text-xs-right">{{ props.item.name }}</td>
               <td class="text-xs-right">{{ props.item.chipId }}</td>
               <td class="text-xs-right">
@@ -223,10 +226,6 @@ export default {
     'app-attach-device-dialog': AttachDeviceDialog
   },
 
-  computed: {
-
-  },
-
   watch: {
     pagination: {
       handler () {
@@ -249,6 +248,13 @@ export default {
       self.items = data.devices
       self.totalItems = data.total
     })
+  },
+
+  sockets: {
+    device (device) {
+      device.new = true
+      this.items.unshift(device)
+    }
   },
 
   methods: {
