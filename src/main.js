@@ -37,8 +37,15 @@ Vue.filter('prettydate', PrettyDate)
 Vue.config.productionTip = false
 
 router.beforeEach((to, from, next) => {
-  document.title = 'RPMS - ' + to.meta.title
-  next()
+  if (to.meta.acl === undefined) {
+    document.title = 'RPMS - ' + to.meta.title
+    next()
+  } else if (to.meta.acl !== undefined && (store.getters['user/acl'] > to.meta.acl)) {
+    next('/')
+  } else {
+    document.title = 'RPMS - ' + to.meta.title
+    next()
+  }
 })
 
 /* eslint-disable no-new */

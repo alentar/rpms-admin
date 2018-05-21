@@ -2,117 +2,155 @@
   <v-container grid-list-md text-xs-center xs10>
     <v-progress-linear v-if="loading === true" :indeterminate="true"></v-progress-linear>
     <v-layout row wrap>
-      <v-flex xs12 v-if="wards.length === 0 && loading === false">
-        <div class="display-3">There are no wards here</div>
-        <div class="display-1">Add some...</div>
+      <v-flex xs12 v-if="ward && loading === false">
+        <span class="title text-xs-left">
+          <template v-if="ward.name">
+            {{ ward.name }} - <span class="subheading">(Ward {{ ward.number }})</span>
+          </template>
+          <template v-else>
+            Ward - {{ ward.number }}
+          </template>
+        </span>
       </v-flex>
-      <v-flex xs3 v-for="bed in beds" :key="bed._id">
-        <v-card dark color="light-blue accent-4" height="200px" class="text-xs-center">
-          <v-card-text class="px-0">
-            <div class="display-2">Ward</div>
-            <div class="display-1">{{ ward.number }}</div>
-            <div class="subheading">{{ ward.name }}</div>
-            <div class="body-2">{{ getNumberOfBeds(ward) }} Beds</div>
-            <v-btn color="green darken-1" icon><v-icon>visibility</v-icon></v-btn>
-            <v-btn color="indigo darken-2" icon @click.native.stop="updateWard(ward)"><v-icon>mode_edit</v-icon></v-btn>
-            <v-btn color="red darken-1" icon @click.native.stop="deleteWard(ward)"><v-icon>delete</v-icon></v-btn>
-          </v-card-text>
-        </v-card>
+      <v-flex xs12 v-if="beds.length === 0 && loading === false">
+        <v-btn @click.native.stop="createBedDialog = true">Add a bed</v-btn>
       </v-flex>
-      <v-btn
-        color="pink"
-        fab
-        dark
-        fixed
-        bottom
-        right
-        style="bottom: 50px"
-        medium
-        @click="createWardDialog = true"
+      <v-flex xs4 v-for="bed in beds" :key="bed._id">
+        <app-bed-card
+          :device="bed.device"
+          :patient="bed.patient"
+          :bed="bed"
+          :ward="id"
+        ></app-bed-card>
+      </v-flex>
+        <v-speed-dial
+          v-model="fab"
+          dark
+          fixed
+          bottom
+          right
+          style="bottom: 50px"
+        >
+        <v-btn
+          slot="activator"
+          v-model="fab"
+          color="pink darken-2"
+          dark
+          fab
+        >
+          <v-icon>mdi-bed-empty</v-icon>
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+
+        <v-tooltip left>
+          <v-btn
+            fab
+            dark
+            small
+            color="blue"
+            slot="activator"
+            @click.native="createBedDialog = true"
           >
-        <v-icon>add</v-icon>
-      </v-btn>
+            <v-icon>add</v-icon>
+          </v-btn>
+          <span>Add a bed</span>
+        </v-tooltip>
+
+        <v-tooltip left>
+          <v-btn
+            fab
+            dark
+            small
+            color="green"
+            slot="activator"
+            @click.native="createBedsDialog = true"
+          >
+            <v-icon>mdi-library-plus</v-icon>
+          </v-btn>
+            <span>Add beds to ward</span>
+        </v-tooltip>
+      </v-speed-dial>
     </v-layout>
+
+    <app-bed-create-dialog
+      :beds="bedNumbers"
+      :display="createBedDialog"
+      :ward="id"
+      @close="createBedDialog = false"
+      @bedCreated="bedCreated"
+    ></app-bed-create-dialog>
+    <app-beds-create-dialog
+      :display="createBedsDialog"
+      :ward="id"
+      @close="createBedsDialog = false"
+      @bedsCreated="bedsCreated"
+    ></app-beds-create-dialog>
   </v-container>
 </template>
 
 <script>
 import ward from '@/services/rpms/ward'
+import CreateBedDialog from '@/components/Wards/Beds/Dialogs/CreateBedDialog'
+import CreateBedsDialog from '@/components/Wards/Beds/Dialogs/CreateBedsDialog'
+import BedCard from '@/components/Wards/Beds/Cards/BedCard'
 
 export default {
   name: 'ward',
 
-  props: ['ward'],
+  props: ['id'],
+
+  components: {
+    'app-bed-create-dialog': CreateBedDialog,
+    'app-beds-create-dialog': CreateBedsDialog,
+    'app-bed-card': BedCard
+  },
 
   data () {
     return {
       beds: [],
-      wards: [],
-      createWardDialog: false,
-      deleteWardDialog: false,
-      editWardDialog: false,
-      wardForEdit: null,
-      wardForDelete: null,
-      loading: false
-    }
-  },
-
-  computed: {
-    wardNumbers () {
-      return this.wards.map(ward => ward.number)
+      loading: false,
+      fab: false,
+      ward: null,
+      createBedDialog: false,
+      createBedsDialog: false,
+      show: false
     }
   },
 
   mounted () {
+    const self = this
     this.getWard().then((ward) => {
-      this.beds = ward.beds
+      self.ward = ward
+      self.beds = ward.beds
     })
+  },
+
+  computed: {
+    bedNumbers () {
+      return this.beds.map(bed => bed.number)
+    }
   },
 
   methods: {
     async getWard () {
       this.loading = true
-      return ward.getWards(this.ward).then((res) => {
+      return ward.getWard(this.id).then((res) => {
         this.loading = false
-        return Promise.resolve(res.ward)
+        return Promise.resolve(res)
       }).catch(err => {
         this.loading = false
         console.log(err)
       })
     },
 
-    wardCreated (ward) {
-      this.createWardDialog = false
-      this.wards.push(ward)
-      this.wards.sort((a, b) => { return a.number - b.number })
+    bedCreated (bed) {
+      this.beds.push(bed)
+      this.createBedDialog = false
     },
 
-    deleteWard (ward) {
-      this.wardForDelete = ward
-      this.deleteWardDialog = true
-    },
-
-    wardDeleted (ward) {
-      this.wards.splice(this.wards.indexOf(ward), 1)
-      this.wards = [...this.wards]
-      this.wardForDelete = null
-      this.deleteWardDialog = false
-    },
-
-    updateWard (ward) {
-      this.wardForEdit = ward
-      this.editWardDialog = true
-    },
-
-    wardUpdated (ward) {
-      const index = this.wards.indexOf(this.wards.find(item => item._id === ward._id))
-      this.wards[index] = ward
-      this.closeUpdateUserDialog()
-    },
-
-    closeUpdateUserDialog () {
-      this.editWardDialog = false
-      this.wardForEdit = null
+    bedsCreated (beds) {
+      this.beds.push(...beds)
+      this.createBedsDialog = false
     }
   }
 }
