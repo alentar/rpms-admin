@@ -12,7 +12,6 @@ export default {
       .signIn(payload.nic, payload.password)
       .then(user => {
         commit('shared/SET_LOADING', false, {root: true})
-        if (user.role !== 'admin') throw new Error('Unauthorized user')
 
         dispatch('initializeSocketConnection')
         dispatch('initalize', user)
@@ -29,8 +28,6 @@ export default {
     return auth.autoSignIn()
       .then((user) => {
         commit('shared/SET_LOADING', false, {root: true})
-
-        if (user.role !== 'admin') throw new Error('Unauthorized user')
 
         dispatch('initializeSocketConnection')
         dispatch('initalize', user)

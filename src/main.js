@@ -24,7 +24,9 @@ import AppPlugin from './plugins/app'
 // initilize plugins
 Vue.use(Vuetify)
 Vue.use(AppPlugin, {store})
-Vue.use(VueSocketio, socketio('http://localhost:3000', {autoConnect: false}), store)
+
+/* global SERVICE_URI */
+Vue.use(VueSocketio, socketio(SERVICE_URI, {autoConnect: false}), store)
 
 // filters
 Vue.filter('touppercase', ToUpperCase)
@@ -35,8 +37,15 @@ Vue.filter('prettydate', PrettyDate)
 Vue.config.productionTip = false
 
 router.beforeEach((to, from, next) => {
-  document.title = 'RPMS - ' + to.meta.title
-  next()
+  if (to.meta.acl === undefined) {
+    document.title = 'RPMS - ' + to.meta.title
+    next()
+  } else if (to.meta.acl !== undefined && (store.getters['user/acl'] > to.meta.acl)) {
+    next('/')
+  } else {
+    document.title = 'RPMS - ' + to.meta.title
+    next()
+  }
 })
 
 /* eslint-disable no-new */
