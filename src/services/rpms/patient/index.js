@@ -6,15 +6,23 @@ import auth from '../auth'
 class Patient {
   async admitPatient (payload) {
     return api().post('patients', payload, {
-      headers: auth.accessToken
+      headers: {
+        Authorization: auth.accessToken
+      }
     })
-    .then(res => Promise.resolve(res.data.patient))
-    .catch(err => Promise.reject(err.response.data))
+    .then(res => {
+      return Promise.resolve(res.data.patient)
+    })
+    .catch(err => {
+      return Promise.reject(err.response.data)
+    })
   }
 
   async dischargePatient (patientID) {
     return api().delete(`patients/discharge/${patientID}`, {
-      headers: auth.accessToken
+      headers: {
+        Authorization: auth.accessToken
+      }
     })
     .then(res => Promise.resolve(res.data.patient))
     .catch(err => Promise.reject(err.response.data))
@@ -22,7 +30,9 @@ class Patient {
 
   async deletePatient (patientID) {
     return api().delete(`patients/${patientID}`, {
-      headers: auth.accessToken
+      headers: {
+        Authorization: auth.accessToken
+      }
     })
     .then(res => Promise.resolve(res.data.patient))
     .catch(err => Promise.reject(err.response.data))
@@ -30,7 +40,9 @@ class Patient {
 
   async updatePatient (patientID, payload) {
     return api().put(`patients/${patientID}`, {payload}, {
-      headers: auth.accessToken
+      headers: {
+        Authorization: auth.accessToken
+      }
     })
     .then(res => Promise.resolve(res.data.patient))
     .catch(err => Promise.reject(err.response.data))
@@ -38,7 +50,9 @@ class Patient {
 
   async getPatient (patientID) {
     return api().put(`patients/${patientID}`, {
-      headers: auth.accessToken
+      headers: {
+        Authorization: auth.accessToken
+      }
     })
     .then(res => Promise.resolve(res.data.patient))
     .catch(err => Promise.reject(err.response.data))
@@ -54,7 +68,7 @@ class Patient {
       },
 
       headers: {
-        authorization: auth.accessToken
+        Authorization: auth.accessToken
       }
     })
     .then(res => Promise.resolve(res.data))

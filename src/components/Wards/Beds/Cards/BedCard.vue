@@ -48,8 +48,8 @@
       </div>
     </v-card-title>
     <v-card-actions>
-      <v-btn v-if="patient" class="red" dark>Discharge</v-btn>
-      <v-btn v-else class="blue" dark @click="displayAdmitDialog = true">Admit</v-btn>
+      <v-btn v-if="patient" class="red" @click.native="$emit('discharge', bed)" dark>Discharge</v-btn>
+      <v-btn v-else class="blue" dark @click.native="$emit('admit', bed._id)">Admit</v-btn>
       <v-spacer></v-spacer>
       <template v-if="acl === 0">
         <v-btn icon>
@@ -59,7 +59,7 @@
           <v-icon color="green darken-2">mdi-pencil</v-icon>
         </v-btn>
       </template>
-      <v-btn icon @click.native="show = !show">
+      <v-btn icon @click.native="show = !show" v-if="patient">
         <v-icon>{{ show ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
       </v-btn>
     </v-card-actions>
@@ -92,7 +92,7 @@
             <v-list-tile>
               <v-list-tile-content class="align-end">
                 <v-list-tile-action>
-                  <v-btn class="primary">Report...</v-btn>
+                  <v-btn class="primary" @click.native="$emit('report', patient)">Report...</v-btn>
                 </v-list-tile-action>
               </v-list-tile-content>
             </v-list-tile>
@@ -100,48 +100,37 @@
         </template>
       </v-card-text>
     </v-slide-y-transition>
-    <app-admit-patient-dialog
-      :display="displayAdmitDialog"
-      @close="displayAdmitDialog = false"
-    >
-    </app-admit-patient-dialog>
   </v-card>
 </template>
 
 <script>
-import AdmitPatientDialog from '../../../Patients/Dialogs/AdmitPatientDialog'
-
 export default {
-  props: ['patient', 'device', 'bed', 'ward'],
+  props: ['bed', 'ward', 'device', 'patient'],
 
   data () {
     return {
       show: false,
       bpm: null,
-      temperature: null,
-      displayAdmitDialog: false
+      temperature: null
     }
-  },
-
-  components: {
-    'app-admit-patient-dialog': AdmitPatientDialog
   },
 
   mounted () {
-    if (!this.patient || !this.device) return
-
-    const self = this
-    this.$socket.emit('join', `wards/${this.ward}`)
-    this.$options.sockets[`patient${this.patient._id}`] = (packet) => {
-      self[packet.type] = packet.value
-    }
+    this.connect()
   },
 
   destroyed () {
-    if (!this.patient || !this.device) return
+    this.disconnect()
+  },
 
-    this.$socket.emit('leave', `wards/${this.ward}`)
-    delete this.$options.sockets[`patient${this.patient._id}`]
+  watch: {
+    device (data) {
+      this.connect()
+    },
+
+    patient (data) {
+      this.connect()
+    }
   },
 
   computed: {
@@ -157,7 +146,26 @@ export default {
   },
 
   methods: {
+    admit () {
+      this.$emit('admit', this.bed._id)
+    },
 
+    connect () {
+      if (!this.patient || !this.device) return
+
+      const self = this
+      this.$socket.emit('join', `wards/${this.ward}`)
+      this.$options.sockets[`patient${this.patient._id}`] = (packet) => {
+        self[packet.type] = packet.value
+      }
+    },
+
+    disconnect () {
+      if (!this.patient || !this.device) return
+
+      this.$socket.emit('leave', `wards/${this.ward}`)
+      delete this.$options.sockets[`patient${this.patient._id}`]
+    }
   }
 }
 </script>
