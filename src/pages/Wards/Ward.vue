@@ -22,6 +22,7 @@
           :patient="bed.patient"
           :device="bed.device"
           @admit="admitPatient"
+          @discharge="dischargePatient"
         ></app-bed-card>
       </v-flex>
         <v-speed-dial
@@ -94,6 +95,13 @@
       @patientAdmitted="patientAdmitted"
     >
     </app-admit-patient-dialog>
+    <app-discharge-patient-dialog
+      :display="dischargePatientDialog"
+      :bed="bedForDischarge"
+      @close="dischargePatientDialog = false"
+      @patientDischarged="patientDischarged"
+    >
+    </app-discharge-patient-dialog>
   </v-container>
 </template>
 
@@ -103,6 +111,7 @@ import CreateBedDialog from '@/components/Wards/Beds/Dialogs/CreateBedDialog'
 import CreateBedsDialog from '@/components/Wards/Beds/Dialogs/CreateBedsDialog'
 import BedCard from '@/components/Wards/Beds/Cards/BedCard'
 import AdmitPatientDialog from '../../components/Patients/Dialogs/AdmitPatientDialog'
+import DischargePatientDialog from '../../components/Patients/Dialogs/DischargePatientDialog'
 
 export default {
   name: 'ward',
@@ -113,19 +122,22 @@ export default {
     'app-bed-create-dialog': CreateBedDialog,
     'app-beds-create-dialog': CreateBedsDialog,
     'app-bed-card': BedCard,
-    'app-admit-patient-dialog': AdmitPatientDialog
+    'app-admit-patient-dialog': AdmitPatientDialog,
+    'app-discharge-patient-dialog': DischargePatientDialog
   },
 
   data () {
     return {
       beds: [],
       bedForAdmit: null,
+      bedForDischarge: null,
       loading: false,
       fab: false,
       ward: null,
       createBedDialog: false,
       createBedsDialog: false,
       admitPatientDialog: false,
+      dischargePatientDialog: false,
       show: false
     }
   },
@@ -172,10 +184,24 @@ export default {
     },
 
     patientAdmitted (patient) {
-      console.log(patient)
       const index = this.beds.findIndex((bed) => bed._id === patient.bed)
       const newBed = Object.assign({}, this.beds[index], {
         patient: patient
+      })
+      this.$set(this.beds, index, newBed)
+    },
+
+    dischargePatient (bed) {
+      this.bedForDischarge = bed
+      this.dischargePatientDialog = true
+    },
+
+    patientDischarged (bed) {
+      const index = this.beds.findIndex((item) => item._id === bed)
+      console.log(bed)
+      console.log(index)
+      const newBed = Object.assign({}, this.beds[index], {
+        patient: null
       })
       this.$set(this.beds, index, newBed)
     }

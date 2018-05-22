@@ -48,7 +48,7 @@
       </div>
     </v-card-title>
     <v-card-actions>
-      <v-btn v-if="patient" class="red" dark>Discharge</v-btn>
+      <v-btn v-if="patient" class="red" @click.native="$emit('discharge', bed)" dark>Discharge</v-btn>
       <v-btn v-else class="blue" dark @click.native="$emit('admit', bed._id)">Admit</v-btn>
       <v-spacer></v-spacer>
       <template v-if="acl === 0">
