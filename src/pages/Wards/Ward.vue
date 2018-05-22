@@ -23,6 +23,7 @@
           :device="bed.device"
           @admit="admitPatient"
           @discharge="dischargePatient"
+          @report="patientReport"
         ></app-bed-card>
       </v-flex>
         <v-speed-dial
@@ -102,6 +103,12 @@
       @patientDischarged="patientDischarged"
     >
     </app-discharge-patient-dialog>
+    <app-patient-report-dialog
+      :patient="patientForReport"
+      :display="patientReportDialog"
+      @close="patientReportDialog = false"
+    >
+    </app-patient-report-dialog>
   </v-container>
 </template>
 
@@ -112,6 +119,7 @@ import CreateBedsDialog from '@/components/Wards/Beds/Dialogs/CreateBedsDialog'
 import BedCard from '@/components/Wards/Beds/Cards/BedCard'
 import AdmitPatientDialog from '../../components/Patients/Dialogs/AdmitPatientDialog'
 import DischargePatientDialog from '../../components/Patients/Dialogs/DischargePatientDialog'
+import PatientReportDialog from '../../components/Patients/Dialogs/PatientReportDialog'
 
 export default {
   name: 'ward',
@@ -123,7 +131,8 @@ export default {
     'app-beds-create-dialog': CreateBedsDialog,
     'app-bed-card': BedCard,
     'app-admit-patient-dialog': AdmitPatientDialog,
-    'app-discharge-patient-dialog': DischargePatientDialog
+    'app-discharge-patient-dialog': DischargePatientDialog,
+    'app-patient-report-dialog': PatientReportDialog
   },
 
   data () {
@@ -131,6 +140,7 @@ export default {
       beds: [],
       bedForAdmit: null,
       bedForDischarge: null,
+      patientForReport: null,
       loading: false,
       fab: false,
       ward: null,
@@ -138,6 +148,7 @@ export default {
       createBedsDialog: false,
       admitPatientDialog: false,
       dischargePatientDialog: false,
+      patientReportDialog: false,
       show: false
     }
   },
@@ -198,12 +209,15 @@ export default {
 
     patientDischarged (bed) {
       const index = this.beds.findIndex((item) => item._id === bed)
-      console.log(bed)
-      console.log(index)
       const newBed = Object.assign({}, this.beds[index], {
         patient: null
       })
       this.$set(this.beds, index, newBed)
+    },
+
+    patientReport (patient) {
+      this.patientForReport = patient
+      this.patientReportDialog = true
     }
   }
 }
