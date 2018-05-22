@@ -49,7 +49,7 @@
     </v-card-title>
     <v-card-actions>
       <v-btn v-if="patient" class="red" dark>Discharge</v-btn>
-      <v-btn v-else class="blue" dark @click="displayAdmitDialog = true">Admit</v-btn>
+      <v-btn v-else class="blue" dark @click.native="$emit('admit', bed._id)">Admit</v-btn>
       <v-spacer></v-spacer>
       <template v-if="acl === 0">
         <v-btn icon>
@@ -100,31 +100,19 @@
         </template>
       </v-card-text>
     </v-slide-y-transition>
-    <app-admit-patient-dialog
-      :display="displayAdmitDialog"
-      @close="displayAdmitDialog = false"
-    >
-    </app-admit-patient-dialog>
   </v-card>
 </template>
 
 <script>
-import AdmitPatientDialog from '../../../Patients/Dialogs/AdmitPatientDialog'
-
 export default {
-  props: ['patient', 'device', 'bed', 'ward'],
+  props: ['bed', 'ward', 'device', 'patient'],
 
   data () {
     return {
       show: false,
       bpm: null,
-      temperature: null,
-      displayAdmitDialog: false
+      temperature: null
     }
-  },
-
-  components: {
-    'app-admit-patient-dialog': AdmitPatientDialog
   },
 
   mounted () {
@@ -157,7 +145,9 @@ export default {
   },
 
   methods: {
-
+    admit () {
+      this.$emit('admit', this.bed._id)
+    }
   }
 }
 </script>

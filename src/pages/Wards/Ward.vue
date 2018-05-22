@@ -17,10 +17,11 @@
       </v-flex>
       <v-flex xs4 v-for="bed in beds" :key="bed._id">
         <app-bed-card
-          :device="bed.device"
-          :patient="bed.patient"
           :bed="bed"
           :ward="id"
+          :patient="bed.patient"
+          :device="bed.device"
+          @admit="admitPatient"
         ></app-bed-card>
       </v-flex>
         <v-speed-dial
@@ -85,6 +86,14 @@
       @close="createBedsDialog = false"
       @bedsCreated="bedsCreated"
     ></app-beds-create-dialog>
+    <app-admit-patient-dialog
+      :display="admitPatientDialog"
+      :ward="id"
+      :bed="bedForAdmit"
+      @close="admitPatientDialog = false"
+      @patientAdmitted="patientAdmitted"
+    >
+    </app-admit-patient-dialog>
   </v-container>
 </template>
 
@@ -93,6 +102,7 @@ import ward from '@/services/rpms/ward'
 import CreateBedDialog from '@/components/Wards/Beds/Dialogs/CreateBedDialog'
 import CreateBedsDialog from '@/components/Wards/Beds/Dialogs/CreateBedsDialog'
 import BedCard from '@/components/Wards/Beds/Cards/BedCard'
+import AdmitPatientDialog from '../../components/Patients/Dialogs/AdmitPatientDialog'
 
 export default {
   name: 'ward',
@@ -102,17 +112,20 @@ export default {
   components: {
     'app-bed-create-dialog': CreateBedDialog,
     'app-beds-create-dialog': CreateBedsDialog,
-    'app-bed-card': BedCard
+    'app-bed-card': BedCard,
+    'app-admit-patient-dialog': AdmitPatientDialog
   },
 
   data () {
     return {
       beds: [],
+      bedForAdmit: null,
       loading: false,
       fab: false,
       ward: null,
       createBedDialog: false,
       createBedsDialog: false,
+      admitPatientDialog: false,
       show: false
     }
   },
@@ -151,6 +164,20 @@ export default {
     bedsCreated (beds) {
       this.beds.push(...beds)
       this.createBedsDialog = false
+    },
+
+    admitPatient (bed) {
+      this.bedForAdmit = bed
+      this.admitPatientDialog = true
+    },
+
+    patientAdmitted (patient) {
+      console.log(patient)
+      const index = this.beds.findIndex((bed) => bed._id === patient.bed)
+      const newBed = Object.assign({}, this.beds[index], {
+        patient: patient
+      })
+      this.$set(this.beds, index, newBed)
     }
   }
 }
