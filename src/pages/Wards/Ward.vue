@@ -104,7 +104,9 @@
     >
     </app-discharge-patient-dialog>
     <app-patient-report-dialog
+      v-if="patientForReport"
       :patient="patientForReport"
+      :device="patientDevice"
       :display="patientReportDialog"
       @close="patientReportDialog = false"
     >
@@ -149,6 +151,7 @@ export default {
       admitPatientDialog: false,
       dischargePatientDialog: false,
       patientReportDialog: false,
+      patientDevice: null,
       show: false
     }
   },
@@ -215,8 +218,9 @@ export default {
       this.$set(this.beds, index, newBed)
     },
 
-    patientReport (patient) {
-      this.patientForReport = patient
+    patientReport (data) {
+      this.patientForReport = data.patient
+      this.patientDevice = data.device
       this.patientReportDialog = true
     }
   }

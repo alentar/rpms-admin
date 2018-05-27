@@ -49,7 +49,7 @@ class Patient {
   }
 
   async getPatient (patientID) {
-    return api().put(`patients/${patientID}`, {
+    return api().get(`patients/${patientID}`, {
       headers: {
         Authorization: auth.accessToken
       }
@@ -72,6 +72,16 @@ class Patient {
       }
     })
     .then(res => Promise.resolve(res.data))
+    .catch(err => Promise.reject(err.response.data))
+  }
+
+  async getRecords (patientID, type) {
+    return api().get(`patients/${patientID}/records?type=${type}`, {
+      headers: {
+        Authorization: auth.accessToken
+      }
+    })
+    .then(res => Promise.resolve(res.data.records))
     .catch(err => Promise.reject(err.response.data))
   }
 }

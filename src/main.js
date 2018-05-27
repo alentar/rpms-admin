@@ -11,8 +11,8 @@ import './styles/css/styles.css'
 import rpms from './services/rpms'
 import VueSocketio from 'vue-socket.io'
 import socketio from 'socket.io-client'
-import VueChartkick from 'vue-chartkick'
-import Chart from 'chart.js'
+import VueHighcharts from 'vue-highcharts'
+import Highcharts from 'highcharts'
 
 // filters
 import ToUpperCase from './filters/touppercase'
@@ -26,7 +26,7 @@ import AppPlugin from './plugins/app'
 // initilize plugins
 Vue.use(Vuetify)
 Vue.use(AppPlugin, {store})
-Vue.use(VueChartkick, {adapter: Chart})
+Vue.use(VueHighcharts, { Highcharts })
 
 /* global SERVICE_URI */
 Vue.use(VueSocketio, socketio(SERVICE_URI, {autoConnect: false}), store)
