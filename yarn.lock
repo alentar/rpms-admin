@@ -3571,6 +3571,10 @@ he@1.1.1, he@1.1.x, he@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/he/-/he-1.1.1.tgz#93410fd21b009735151f8868c2f271f3427e23fd"
 
+highcharts@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/highcharts/-/highcharts-6.1.0.tgz#115a6ee10ad36a53d9913f1030c6d46da16c7cb5"
+
 hmac-drbg@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/hmac-drbg/-/hmac-drbg-1.0.1.tgz#d2745701025a6c775a6c545793ed502fc0c649a1"
@@ -7670,6 +7674,10 @@ vue-chartkick@^0.3.1:
   resolved "https://registry.yarnpkg.com/vue-chartkick/-/vue-chartkick-0.3.1.tgz#d1f9b02f8f2fb02b8073a0adeecc1da496d83a37"
   dependencies:
     chartkick "^2.3.5"
+
+vue-highcharts@^0.0.10:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/vue-highcharts/-/vue-highcharts-0.0.10.tgz#a4b90098ede77a65cca87e62bed87549e1e1c985"
 
 vue-hot-reload-api@^2.2.0:
   version "2.3.0"

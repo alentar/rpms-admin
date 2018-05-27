@@ -92,7 +92,7 @@
             <v-list-tile>
               <v-list-tile-content class="align-end">
                 <v-list-tile-action>
-                  <v-btn class="primary" @click.native="$emit('report', patient)">Report...</v-btn>
+                  <v-btn class="primary" @click.native="$emit('report', {patient, device})">Report...</v-btn>
                 </v-list-tile-action>
               </v-list-tile-content>
             </v-list-tile>
