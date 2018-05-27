@@ -12,6 +12,7 @@ import Help from '@/pages/Help/Help'
 import Patients from '@/pages/Patients/Patients'
 import Settings from '@/pages/Settings/Settings'
 import Wards from '@/pages/Wards/Wards'
+import Ward from '@/pages/Wards/Ward'
 import Profile from '@/pages/Profile/Profile'
 
 // Guards
@@ -44,18 +45,17 @@ export default new Router({
       path: '/users',
       component: { template: '<router-view/>' },
       children: [
-        { path: '', component: Users, meta: { title: 'Users' }, beforeEnter: AuthGuard },
-        { path: ':id', component: User, props: true, meta: { title: 'User Profile' }, beforeEnter: AuthGuard }
+        { path: '', component: Users, meta: { title: 'Users', acl: 0 }, beforeEnter: AuthGuard },
+        { path: ':id', component: User, props: true, meta: { title: 'User Profile', acl: 0 }, beforeEnter: AuthGuard }
       ]
     },
     {
       path: '/wards',
-      name: 'Wards',
-      component: Wards,
-      beforeEnter: AuthGuard,
-      meta: {
-        title: 'Wards'
-      }
+      component: { template: '<router-view/>' },
+      children: [
+        { path: '', component: Wards, meta: { title: 'Wards' }, beforeEnter: AuthGuard },
+        { path: ':id', component: Ward, props: true, meta: { title: 'Ward' }, beforeEnter: AuthGuard }
+      ]
     },
     {
       path: '/devices',
@@ -63,7 +63,8 @@ export default new Router({
       component: Devices,
       beforeEnter: AuthGuard,
       meta: {
-        title: 'Devices'
+        title: 'Devices',
+        acl: 0
       }
     },
     {

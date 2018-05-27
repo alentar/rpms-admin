@@ -13,7 +13,7 @@
             <div class="display-1">{{ ward.number }}</div>
             <div class="subheading">{{ ward.name }}</div>
             <div class="body-2">{{ getNumberOfBeds(ward) }} Beds</div>
-            <v-btn color="green darken-1" icon><v-icon>visibility</v-icon></v-btn>
+            <v-btn color="green darken-1" icon @click.native.stop="$router.push(`wards/${ward._id}`)"><v-icon>visibility</v-icon></v-btn>
             <v-btn color="indigo darken-2" icon @click.native.stop="updateWard(ward)"><v-icon>mode_edit</v-icon></v-btn>
             <v-btn color="red darken-1" icon @click.native.stop="deleteWard(ward)"><v-icon>delete</v-icon></v-btn>
           </v-card-text>
